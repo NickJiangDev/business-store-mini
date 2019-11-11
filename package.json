@@ -43,6 +43,7 @@
     "nervjs": "^1.4.0"
   },
   "devDependencies": {
+    "@tarojs/async-await": "^1.3.22",
     "@tarojs/plugin-babel": "1.3.22",
     "@tarojs/plugin-csso": "1.3.22",
     "@tarojs/plugin-sass": "1.3.22",

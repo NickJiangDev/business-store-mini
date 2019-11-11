@@ -1,14 +1,27 @@
-import { useState, useRouter } from "@tarojs/taro";
+import { useState, useRouter, useEffect } from "@tarojs/taro";
 import { View, Button } from "@tarojs/components";
-
+import useAsyncFn from "@/shared/useAsyncFn";
+import { getOrderList } from "@/services/index";
 import "./index.scss";
 
+const defaultOrderResponseData = { total: 0, records: [] };
 function Counter() {
   const {
     params: { initialCount = 0 }
   } = useRouter();
   const [count, setCount] = useState(initialCount);
+  // 获取订单列表
+  const [
+    { value: orderResult = defaultOrderResponseData, loading },
+    fetchOrderList
+  ] = useAsyncFn<any>(getOrderList);
 
+  console.log(loading, orderResult);
+  useEffect(() => {
+    if (!!count) {
+      fetchOrderList();
+    }
+  }, [count]);
   return (
     <View>
       Count: {count}
