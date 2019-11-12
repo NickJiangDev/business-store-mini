@@ -1,8 +1,8 @@
 import md5 from "md5";
-import sunmiEnv from "./sunmiEnv";
+import env from "./env";
 import Des from "./Des";
 
-const { MD5_KEY, IS_ENCRYPTED } = sunmiEnv({
+const { MD5_KEY, IS_ENCRYPTED } = env({
   dev: {
     MD5_KEY: "Woyouxinxi666",
     IS_ENCRYPTED: 0

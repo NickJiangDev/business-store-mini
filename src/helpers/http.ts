@@ -1,8 +1,8 @@
 import createHttpUtil from "@/shared/httpUtil";
 import normalizeParams from "./normalizeParams";
-import sunmiEnv from "./sunmiEnv";
+import env from "./env";
 
-export const host = sunmiEnv({
+export const host = env({
   // dev: "http://10.10.160.73:45502",
   dev: "https://dev.webapi.sunmi.com/webapi/businesslink",
   test: "http://rapserver.sunmi.com",

@@ -1,7 +1,7 @@
 import createDes from "@/shared/Des";
-import sunmiEnv from "./sunmiEnv";
+import env from "./env";
 
-const desConfig = sunmiEnv({
+const desConfig = env({
   dev: {
     Key: "wywmxxkj",
     Iv: "12345678"
