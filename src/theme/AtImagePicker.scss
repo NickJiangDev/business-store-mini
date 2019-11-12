@@ -1,0 +1,7 @@
+.at-image-picker {
+  &--noRemove {
+    .at-image-picker__remove-btn {
+      display: none;
+    }
+  }
+}

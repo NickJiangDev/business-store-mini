@@ -1,0 +1,14 @@
+.at-divider {
+  &--normalize {
+    .at-divider__content {
+      background: $page-background-color;
+      color: #ccc;
+      font-size: 24px !important;
+    }
+    .at-divider__line {
+      width: 50%;
+      left: 25%;
+      background: rgba(204, 204, 204, 0.5);
+    }
+  }
+}

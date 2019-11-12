@@ -75,6 +75,12 @@ class Index extends Component {
     });
   };
 
+  toShop = () => {
+    Taro.navigateTo({
+      url: "/pages/nearShop/index"
+    });
+  };
+
   numberLogin = (e: any) => {
     console.log(e);
   };
@@ -86,6 +92,9 @@ class Index extends Component {
       <View className="index">
         <AtButton className="index" type="primary" onClick={this.toCard}>
           会员页面跳转
+        </AtButton>
+        <AtButton className="index" type="primary" onClick={this.toShop}>
+          附近门店
         </AtButton>
         <AtButton className="index" type="primary" onClick={this.toHooks}>
           Hooks页面组件

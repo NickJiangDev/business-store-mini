@@ -4,8 +4,6 @@ import { Provider } from "@tarojs/mobx";
 import Index from "./pages/index";
 
 import counterStore from "./store/counter";
-
-import "taro-ui/dist/style/index.scss"; // 全局引入一次即可
 import "./app.scss";
 
 // 如果需要在 h5 环境中开启 React Devtools
@@ -27,7 +25,17 @@ class App extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    pages: ["pages/index/index", "pages/codeDemo/index", "pages/hooks/index"],
+    pages: [
+      "pages/index/index",
+      "pages/codeDemo/index",
+      "pages/hooks/index",
+      "pages/nearShop/index"
+    ],
+    permission: {
+      "scope.userLocation": {
+        desc: "你的位置信息将用于为您招到服务门店" // 高速公路行驶持续后台定位
+      }
+    },
     window: {
       backgroundTextStyle: "light",
       navigationBarBackgroundColor: "#fff",

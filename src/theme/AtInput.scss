@@ -1,0 +1,22 @@
+.at-input {
+  // margin-left: 0px;
+  // padding-left: 32px;
+  .at-input__title {
+    font-size: 30px;
+  }
+  input {
+    font-size: 28px;
+  }
+  &--captcha {
+    .at-input__children {
+      // margin-right: 24px;
+    }
+    .at-input__children > view {
+      // color: initial;
+      padding-right: 0;
+      font-size: 28px;
+    }
+  }
+}
+
+/* TODO: placeholder 颜色 #333C4F */

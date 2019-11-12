@@ -1,0 +1,7 @@
+.at-card {
+  &--noheader {
+    .at-card__header {
+      display: none;
+    }
+  }
+}

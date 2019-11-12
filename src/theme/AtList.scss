@@ -1,0 +1,28 @@
+.at-list {
+  .item-extra__info {
+    padding-right: 0;
+  }
+  // 点击高亮状态
+  .at-list__item-extra {
+    width: 16em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .item-extra__info {
+      padding-right: 10px;
+      font-size: 28px;
+    }
+  }
+  .at-list__item {
+    padding-left: 32px;
+    padding-right: 32px;
+    .item-extra__icon {
+      position: static;
+      transform: none;
+      font-size: 28px;
+    }
+    .item-content__info-title {
+      font-size: 30px;
+    }
+  }
+}

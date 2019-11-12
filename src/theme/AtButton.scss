@@ -1,0 +1,32 @@
+.at-button {
+  // &--disabled {
+  // }
+  // &--icon {
+  //   padding: 0;
+  //   border: 0;
+  //   display: flex;
+  //   align-items: center;
+  //   flex: initial;
+  //   overflow: hidden;
+  //   image {
+  //     width: 38px;
+  //   }
+  // }
+  // &--small {
+  //   color: #333C4F;
+  //   border: 1px solid rgba(102, 102, 102, 0.4);
+  // }
+  // &--secondary {
+  //   color: $color-brand;
+  //   border: 1px solid $color-brand;
+  // }
+}
+
+button::after {
+  border: 0;
+}
+
+.at-button__text {
+  display: inline-flex;
+  align-items: center;
+}
