@@ -29,7 +29,8 @@ class App extends Component {
       "pages/index/index",
       "pages/codeDemo/index",
       "pages/hooks/index",
-      "pages/nearShop/index"
+      "pages/nearShop/index",
+      "pages/order/index"
     ],
     permission: {
       "scope.userLocation": {
