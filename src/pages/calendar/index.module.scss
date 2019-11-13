@@ -1,0 +1,39 @@
+.sign {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 30vh;
+  background-color: red;
+
+  .p {
+    background-color: #fff;
+    text-align: center;
+    line-height: 200px;
+    color: red;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+  }
+
+  .span {
+    color: #fff;
+    position: relative;
+    top: 30px;
+  }
+}
+
+.signHeader {
+  width: 96vw;
+  margin: 2vw;
+  position: absolute;
+  display: flex;
+  top: 20px;
+  justify-content: space-between;
+  align-items: center;
+
+  .span {
+    color: #fff;
+  }
+}

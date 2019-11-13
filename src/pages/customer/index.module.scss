@@ -1,0 +1,21 @@
+.barcode {
+  display: flex;
+  margin-top: 50px;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.balance {
+  width: 100vw;
+  height: 30vh;
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .p {
+    color: #fff;
+  }
+}

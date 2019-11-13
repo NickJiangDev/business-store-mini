@@ -27,10 +27,15 @@ class App extends Component {
   config: Config = {
     pages: [
       "pages/index/index",
-      "pages/codeDemo/index",
+      "pages/customer/index",
       "pages/hooks/index",
       "pages/nearShop/index",
-      "pages/order/index"
+      "pages/order/index",
+      "pages/calendar/index",
+      "pages/card/index",
+      "pages/pay/index",
+      "pages/cardCenter/index",
+      "pages/integral/index"
     ],
     permission: {
       "scope.userLocation": {

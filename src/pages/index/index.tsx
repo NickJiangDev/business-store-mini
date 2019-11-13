@@ -65,7 +65,7 @@ class Index extends Component {
 
   toCard = () => {
     Taro.navigateTo({
-      url: "/pages/codeDemo/index"
+      url: "/pages/customer/index"
     });
   };
 
@@ -87,6 +87,23 @@ class Index extends Component {
     });
   };
 
+  toCalendar = () => {
+    Taro.navigateTo({
+      url: "/pages/calendar/index"
+    });
+  };
+
+  toMainCard = () => {
+    Taro.navigateTo({
+      url: "/pages/card/index"
+    });
+  };
+
+  toCardCenter = () => {
+    Taro.navigateTo({
+      url: "/pages/cardCenter/index"
+    });
+  };
   numberLogin = (e: any) => {
     console.log(e);
   };
@@ -104,6 +121,15 @@ class Index extends Component {
         </AtButton>
         <AtButton className="index" type="primary" onClick={this.toOrder}>
           优惠券
+        </AtButton>
+        <AtButton className="index" type="primary" onClick={this.toCalendar}>
+          签到
+        </AtButton>
+        <AtButton className="index" type="primary" onClick={this.toMainCard}>
+          会员卡
+        </AtButton>
+        <AtButton className="index" type="primary" onClick={this.toCardCenter}>
+          领劵中心
         </AtButton>
         <AtButton className="index" type="primary" onClick={this.toHooks}>
           Hooks页面组件

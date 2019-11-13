@@ -1,15 +1,27 @@
 import { AtButton } from "taro-ui";
 
 function LoginButton() {
+  const setUserInfo = (res: any) => {
+    const userInfo = res.detail.userInfo;
+    Taro.setStorageSync("userInfo", userInfo);
+  };
   return (
     <AtButton
       className="index"
       type="primary"
-      openType="getPhoneNumber"
-      onGetPhoneNumber={this.numberLogin}
+      openType="getUserInfo"
+      onGetUserInfo={setUserInfo}
     >
-      微信手机授权登录
+      微信授权登录
     </AtButton>
+    // <AtButton
+    //   className="index"
+    //   type="primary"
+    //   openType="getPhoneNumber"
+    //   onGetPhoneNumber={this.numberLogin}
+    // >
+    //   微信手机授权登录
+    // </AtButton>
   );
 }
 
