@@ -1,18 +1,49 @@
+import Taro from "@tarojs/taro";
 import { AtButton } from "taro-ui";
+import useAsyncFn from "@/shared/useAsyncFn";
+import { getLogin, getUnionId } from "@/services/index";
 
-function LoginButton() {
+const LoginButton = () => {
+  // 登录授权回调
+  const [{ loading }, fetchLogin] = useAsyncFn<any>(getLogin);
+  const [{ loading: unionIdLoading }, fetchUnionId] = useAsyncFn<any>(
+    getUnionId
+  );
   const setUserInfo = (res: any) => {
+    const { encryptedData, iv } = res.detail;
     const userInfo = res.detail.userInfo;
-    Taro.setStorageSync("userInfo", userInfo);
+    if (userInfo) {
+      // 成功
+      Taro.login({
+        async success(res) {
+          if (res.code) {
+            const { openid } = await fetchLogin({ jscode: res.code });
+            const { unionid } = await fetchUnionId({
+              openid,
+              encrypteddata: encryptedData,
+              iv
+            });
+            Taro.setStorageSync("userInfo", userInfo);
+            Taro.setStorageSync("openid", openid);
+            Taro.setStorageSync("unionid", unionid);
+          } else {
+            console.log("登录失败！" + res.errMsg);
+          }
+        }
+      });
+    } else {
+      // 拒绝
+      Taro.showToast({ icon: "none", title: "拒绝" });
+    }
   };
   return (
     <AtButton
-      className="index"
       type="primary"
+      loading={loading || unionIdLoading}
       openType="getUserInfo"
       onGetUserInfo={setUserInfo}
     >
-      微信授权登录
+      授权获取用户信息
     </AtButton>
     // <AtButton
     //   className="index"
@@ -23,13 +54,6 @@ function LoginButton() {
     //   微信手机授权登录
     // </AtButton>
   );
-}
-
-// #region 导出注意
-//
-// 经过上面的声明后需要将导出的 Taro.Component 子类修改为子类本身的 props 属性
-// 这样在使用这个子类时 Ts 才不会提示缺少 JSX 类型参数错误
-//
-// #endregion
+};
 
 export default LoginButton;

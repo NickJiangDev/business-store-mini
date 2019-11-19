@@ -1,20 +1,36 @@
 import http from "@/helpers/http";
+import Taro from "@tarojs/taro";
 
-interface IGetOrderListParams {
-  custId?: string;
-  orderStatus: string;
-  pageIndex: number;
-  pageSize: number;
+interface ILoginParams {
+  jscode: string;
 }
-
 /**
- * 订单列表及检索
- * http://rapserver.sunmi.com/app/mock/169/POST/%2Forder%2Flist
- * @param {IGetOrderListParams} params
+ * 登录授权
+ * @param {ILoginParams} params
  * @returns
  */
-function getOrderList(params: IGetOrderListParams) {
-  return http.get("/app/mock/115/GET/%2Fapi%2Fconfig", params);
+function getLogin(params: ILoginParams) {
+  return http.post(
+    { model: "login", action: "getopenid" },
+    {
+      appid: "wx6b335ca80d60df42",
+      ...params
+    }
+  );
 }
 
-export { getOrderList };
+interface IUnionParams {
+  openid: string;
+  iv: string;
+  encrypteddata: string;
+}
+/**
+ * 获取unionId
+ * @param {IUnionParams} params
+ * @returns
+ */
+function getUnionId(params: IUnionParams) {
+  return http.post({ model: "login", action: "getunionid" }, params);
+}
+
+export { getLogin, getUnionId };

@@ -1,8 +1,11 @@
 import Taro from "@tarojs/taro";
 import ERROR_MAP from "@/constants/ERROR_MAP";
 import logger from "./logger";
+import { signEncode } from "@/helpers/normalizeParams";
 import FetchError from "./FetchError";
 import normalizeWxResponse from "./normalizeWxResponse";
+
+const overdueCode = 999;
 
 const defaultHttpUtilOption = {
   host: "",
@@ -10,7 +13,7 @@ const defaultHttpUtilOption = {
   onError: error => logger.error(error),
   resolveFullURL: ({ host, api, method }) => {
     logger.info(method);
-    return `${host}${api}`;
+    return `${host}`;
   },
   normalizeParams: (params: object) => {
     logger.info(params);
@@ -26,7 +29,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
     ...createOption
   };
   const fetch = async (api, opt) => {
-    const token = Taro.getStorageSync("token");
+    // const token = Taro.getStorageSync("token");
     const fullUrl = resolveFullURL({ host, api, method: opt.method });
     const data = normalizeParams({
       ...opt.body
@@ -36,14 +39,15 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
       url: fullUrl,
       method: opt.method,
       header: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: token
+        "Content-Type": "application/x-www-form-urlencoded"
+        // Authorization: token
       },
-      data
+      data: { ...data, ...api, sign: signEncode({ ...data, ...api }) }
     });
     const res = normalizeWxResponse(result);
-    if (res.statusCode !== 1 || catchedCode.includes(res.statusCode)) {
-      if (res.statusCode === 999) {
+
+    if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
+      if (res.statusCode === overdueCode) {
         const { confirm } = await Taro.showModal({
           title: "提示",
           showCancel: false,
@@ -51,8 +55,8 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
           confirmText: "重新登录"
         });
         if (confirm) {
-          Taro.setStorageSync("token", "");
-          Taro.reLaunch({ url: "/pages/login/index" });
+          // Taro.setStorageSync("token", "");
+          Taro.reLaunch({ url: "/pages/index/index" });
         }
         return;
       }

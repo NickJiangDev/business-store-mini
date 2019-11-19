@@ -8,7 +8,7 @@ const { MD5_KEY, IS_ENCRYPTED } = env({
     IS_ENCRYPTED: 0
   },
   test: {
-    MD5_KEY: "Woyouxinxi666",
+    MD5_KEY: "5a899a41f4fdad2eea546038aa6daf1b",
     IS_ENCRYPTED: 0
   },
   uat: {
@@ -22,48 +22,52 @@ const { MD5_KEY, IS_ENCRYPTED } = env({
 });
 
 export const signEncode = (form: any) => {
-  const key = MD5_KEY;
-  const { params, timeStamp, randomNum } = form;
-  // console.log("MD5_KEY", MD5_KEY);
-  // console.log(md5(key));
-  const sign = md5(params + IS_ENCRYPTED + timeStamp + randomNum + md5(key));
-  // console.log("sign", sign);
-  return sign;
+  const orderly = Object.keys(form).sort();
+  orderly.push("key");
+  form.key = MD5_KEY;
+  let sign = "";
+  orderly.map((_d: string, index: number) => {
+    sign += `${_d}=${form[_d]}${index !== orderly.length - 1 ? "&" : ""}`;
+  });
+  const md5_sign = md5(sign).toUpperCase();
+  return md5_sign;
 };
 
-export const paramsEncode = (params: object) => {
-  const paramsString = JSON.stringify(params);
+export const paramEncode = (param: object) => {
+  const paramString = JSON.stringify(param);
   if (IS_ENCRYPTED) {
-    return Des.encrypt(paramsString);
+    return Des.encrypt(paramString);
   }
-  return paramsString;
+  return paramString;
 };
 
 interface NormalizedParams {
-  timeStamp: number;
-  randomNum: number;
-  isEncrypted: 0 | 1;
-  params: string;
+  timestamp: number;
+  // isEncrypted: 0 | 1;
+  param: string;
   sign: string;
-  lang: string;
   file: File;
-  debug_key: string;
+  // debug_key: string;
+  version: string;
+  format: string;
+  model: string;
+  action: string;
 }
 
-export default function normalizeParams(params: any) {
+export default function normalizeParams(param: any) {
   const formData: Partial<NormalizedParams> = {};
-  formData.timeStamp = Math.floor(new Date().getTime() / 1000);
-  formData.randomNum = Math.floor(Math.random() * 1000000);
-  formData.isEncrypted = IS_ENCRYPTED;
-  if (params.file) {
-    formData.file = params.file;
-    delete params.file;
+  formData.timestamp = Math.floor(new Date().getTime() / 1000);
+  formData.version = "CV1";
+  formData.format = "json";
+  // formData.isEncrypted = IS_ENCRYPTED;
+  if (param.file) {
+    formData.file = param.file;
+    delete param.file;
   }
-  // console.log("params", params);
-  formData.params = paramsEncode(params);
+  // console.log("param", param);
+  formData.param = paramEncode(param);
+  formData.model = param.model;
+  formData.action = param.action;
   // formData.debug_key = "QSZ1%2FQb7%2B18xZlHSBSSD3xbZCCKoK";
-  // console.log("encodedParams", formData.params);
-  formData.sign = signEncode(formData);
-  formData.lang = "zh";
   return formData;
 }

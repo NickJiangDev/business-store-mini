@@ -1,11 +1,11 @@
 import { ComponentType } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Text } from "@tarojs/components";
-import { AtButton } from "taro-ui";
+import { View, Image } from "@tarojs/components";
 import { observer, inject } from "@tarojs/mobx";
 import LoginButton from "../../components/LoginButton";
+import namedPng from "./images.png";
 
-import "./index.scss";
+import Styles from "./index.module.scss";
 
 type PageStateProps = {
   counterStore: {
@@ -112,8 +112,8 @@ class Index extends Component {
       counterStore: { counter }
     } = this.props;
     return (
-      <View className="index">
-        <AtButton className="index" type="primary" onClick={this.toCard}>
+      <View className={Styles.index}>
+        {/* <AtButton className="index" type="primary" onClick={this.toCard}>
           会员页面跳转
         </AtButton>
         <AtButton className="index" type="primary" onClick={this.toShop}>
@@ -133,11 +133,10 @@ class Index extends Component {
         </AtButton>
         <AtButton className="index" type="primary" onClick={this.toHooks}>
           Hooks页面组件
-        </AtButton>
-        <View className="index">
-          <LoginButton />
-        </View>
-        <AtButton className="index" onClick={this.increment}>
+        </AtButton> */}
+        <Image src={namedPng} mode="aspectFit" className={Styles.img} />
+        <LoginButton />
+        {/* <AtButton className="index" onClick={this.increment}>
           +
         </AtButton>
         <AtButton className="index" onClick={this.decrement}>
@@ -145,8 +144,8 @@ class Index extends Component {
         </AtButton>
         <AtButton className="index" onClick={this.incrementAsync}>
           Add Async
-        </AtButton>
-        <Text>{counter}</Text>
+        </AtButton> */}
+        {/* <Text>{counter}</Text> */}
       </View>
     );
   }

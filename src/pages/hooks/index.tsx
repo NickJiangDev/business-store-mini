@@ -16,7 +16,6 @@ function Counter() {
     fetchOrderList
   ] = useAsyncFn<any>(getOrderList);
 
-  console.log(loading, orderResult);
   useEffect(() => {
     if (!!count) {
       fetchOrderList();

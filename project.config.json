@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "Card-Mobx",
 	"description": "demo",
-	"appid": "wx788e826c7368b622",
+	"appid": "wx6b335ca80d60df42",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
