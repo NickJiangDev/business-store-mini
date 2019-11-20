@@ -1,5 +1,4 @@
 import http from "@/helpers/http";
-import Taro from "@tarojs/taro";
 
 interface ILoginParams {
   jscode: string;
@@ -33,4 +32,28 @@ function getUnionId(params: IUnionParams) {
   return http.post({ model: "login", action: "getunionid" }, params);
 }
 
-export { getLogin, getUnionId };
+/**
+ * 获取注册协议
+ * @returns
+ */
+function getLoginAgreement() {
+  return http.post({ model: "sys", action: "regstatement" });
+}
+
+interface IShopParams {
+  pagesize: number;
+  pageindex: number;
+  latitude?: number;
+  longitude?: number;
+  keywords?: string;
+}
+/**
+ * 获取附近门店
+ * @param {IShopParams} params
+ * @returns
+ */
+function getShop(params: IShopParams) {
+  return http.post({ model: "sys", action: "nearstore" }, params);
+}
+
+export { getLogin, getUnionId, getLoginAgreement, getShop };

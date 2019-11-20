@@ -4,7 +4,7 @@ import Taro, {
   useReachBottom
 } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtTabs, AtTabsPane, AtProgress, AtButton } from "taro-ui";
+import { AtTabs, AtTabsPane, AtButton } from "taro-ui";
 
 import Styles from "./index.module.scss";
 

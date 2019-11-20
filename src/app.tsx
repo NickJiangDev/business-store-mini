@@ -3,7 +3,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider } from "@tarojs/mobx";
 import Index from "./pages/index";
 
-import counterStore from "./store/counter";
+import indexStore from "./store/counter";
 import "./app.scss";
 
 // 如果需要在 h5 环境中开启 React Devtools
@@ -13,7 +13,7 @@ import "./app.scss";
 // }
 
 const store = {
-  counterStore
+  indexStore
 };
 
 class App extends Component {
@@ -28,14 +28,14 @@ class App extends Component {
     pages: [
       "pages/index/index",
       "pages/customer/index",
-      "pages/hooks/index",
       "pages/nearShop/index",
       "pages/order/index",
       "pages/calendar/index",
       "pages/card/index",
       "pages/pay/index",
       "pages/cardCenter/index",
-      "pages/integral/index"
+      "pages/integral/index",
+      "pages/loginAgreement/index"
     ],
     permission: {
       "scope.userLocation": {

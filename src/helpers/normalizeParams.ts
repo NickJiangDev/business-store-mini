@@ -1,3 +1,4 @@
+import Taro from "@tarojs/taro";
 import md5 from "md5";
 import env from "./env";
 import Des from "./Des";

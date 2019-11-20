@@ -1,8 +1,50 @@
 @import "../../theme/Variables.scss";
+@import "~taro-ui/dist/style/components/search-bar.scss";
+@import "~taro-ui/dist/style/components/button.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
+@import "~taro-ui/dist/style/components/list.scss";
 
-.title {
-  padding: 10px;
-  text-align: center;
-  color: #fff;
-  background-color: $color-brand;
+.cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 20px 0;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 12px;
+
+  .title {
+    font-size: 32px;
+  }
+
+  .distance {
+    margin-left: 20px;
+    font-size: 26px;
+    color: #999;
+  }
+
+  .address {
+    margin-top: 20px;
+    font-size: 26px;
+    color: #999;
+    display: block;
+    word-wrap: break-word;
+  }
+
+  .btn {
+    width: 120px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 26px;
+  }
+}
+
+.empty {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8vh;
+  font-size: 26px;
+  color: #999;
 }

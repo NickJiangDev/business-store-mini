@@ -16,25 +16,33 @@ const LoginButton = () => {
       // 成功
       Taro.login({
         async success(res) {
-          if (res.code) {
-            const { openid } = await fetchLogin({ jscode: res.code });
-            const { unionid } = await fetchUnionId({
-              openid,
-              encrypteddata: encryptedData,
-              iv
-            });
-            Taro.setStorageSync("userInfo", userInfo);
-            Taro.setStorageSync("openid", openid);
-            Taro.setStorageSync("unionid", unionid);
-          } else {
-            console.log("登录失败！" + res.errMsg);
-          }
+          try {
+            if (res.code) {
+              const { openid } = await fetchLogin({ jscode: res.code });
+              const { accesstoken } = await fetchUnionId({
+                openid,
+                encrypteddata: encryptedData,
+                iv
+              });
+              successHandler(userInfo, accesstoken);
+            } else {
+              console.log("登录失败！" + res.errMsg);
+            }
+          } catch (error) {}
         }
       });
     } else {
       // 拒绝
       Taro.showToast({ icon: "none", title: "拒绝" });
     }
+  };
+
+  const successHandler = (userInfo: any, token: string) => {
+    Taro.setStorageSync("userInfo", userInfo);
+    Taro.setStorageSync("token", token);
+    Taro.redirectTo({
+      url: "/pages/nearShop/index"
+    });
   };
   return (
     <AtButton

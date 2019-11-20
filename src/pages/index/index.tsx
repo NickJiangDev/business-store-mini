@@ -1,18 +1,16 @@
 import { ComponentType } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
+import { View, Image, Text } from "@tarojs/components";
 import { observer, inject } from "@tarojs/mobx";
 import LoginButton from "../../components/LoginButton";
-import namedPng from "./images.png";
+import namedPng from "@/assets/images/images.png";
 
 import Styles from "./index.module.scss";
 
 type PageStateProps = {
-  counterStore: {
-    counter: number;
-    increment: Function;
-    decrement: Function;
-    incrementAsync: Function;
+  indexStore: {
+    loginStatus: boolean;
+    noLogin: Function;
   };
 };
 
@@ -20,7 +18,7 @@ interface Index {
   props: PageStateProps;
 }
 
-@inject("counterStore")
+@inject("indexStore")
 @observer
 class Index extends Component {
   /**
@@ -34,7 +32,19 @@ class Index extends Component {
     navigationBarTitleText: "首页"
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    Taro.showLoading({ title: "加载中....." });
+    const token = Taro.getStorageSync("token");
+
+    if (token) {
+      Taro.redirectTo({
+        url: "/pages/nearShop/index"
+      });
+    } else {
+      this.props.indexStore.noLogin();
+      Taro.hideLoading();
+    }
+  }
 
   componentWillReact() {
     console.log("componentWillReact");
@@ -47,21 +57,6 @@ class Index extends Component {
   componentDidShow() {}
 
   componentDidHide() {}
-
-  increment = () => {
-    const { counterStore } = this.props;
-    counterStore.increment();
-  };
-
-  decrement = () => {
-    const { counterStore } = this.props;
-    counterStore.decrement();
-  };
-
-  incrementAsync = () => {
-    const { counterStore } = this.props;
-    counterStore.incrementAsync();
-  };
 
   toCard = () => {
     Taro.navigateTo({
@@ -104,12 +99,18 @@ class Index extends Component {
       url: "/pages/cardCenter/index"
     });
   };
+
+  toAgreement = () => {
+    Taro.navigateTo({
+      url: "/pages/loginAgreement/index"
+    });
+  };
   numberLogin = (e: any) => {
     console.log(e);
   };
   render() {
     const {
-      counterStore: { counter }
+      indexStore: { loginStatus }
     } = this.props;
     return (
       <View className={Styles.index}>
@@ -134,8 +135,6 @@ class Index extends Component {
         <AtButton className="index" type="primary" onClick={this.toHooks}>
           Hooks页面组件
         </AtButton> */}
-        <Image src={namedPng} mode="aspectFit" className={Styles.img} />
-        <LoginButton />
         {/* <AtButton className="index" onClick={this.increment}>
           +
         </AtButton>
@@ -146,6 +145,20 @@ class Index extends Component {
           Add Async
         </AtButton> */}
         {/* <Text>{counter}</Text> */}
+        {loginStatus ? (
+          false
+        ) : (
+          <View>
+            <Image src={namedPng} mode="aspectFit" className={Styles.img} />
+            <LoginButton />
+            <View className={Styles.agreement}>
+              登录即代表您已阅读并同意
+              <Text className={Styles.span} onClick={this.toAgreement}>
+                《用户协议及隐私政策》
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }

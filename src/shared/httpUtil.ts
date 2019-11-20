@@ -5,7 +5,7 @@ import { signEncode } from "@/helpers/normalizeParams";
 import FetchError from "./FetchError";
 import normalizeWxResponse from "./normalizeWxResponse";
 
-const overdueCode = 999;
+const overdueCode = [4003, 4004]; // 4004过期code, 4003验证错误
 
 const defaultHttpUtilOption = {
   host: "",
@@ -29,7 +29,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
     ...createOption
   };
   const fetch = async (api, opt) => {
-    // const token = Taro.getStorageSync("token");
+    const token = Taro.getStorageSync("token");
     const fullUrl = resolveFullURL({ host, api, method: opt.method });
     const data = normalizeParams({
       ...opt.body
@@ -39,15 +39,16 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
       url: fullUrl,
       method: opt.method,
       header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-        // Authorization: token
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: token
       },
       data: { ...data, ...api, sign: signEncode({ ...data, ...api }) }
     });
+
     const res = normalizeWxResponse(result);
 
     if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
-      if (res.statusCode === overdueCode) {
+      if (overdueCode.includes(res.statusCode)) {
         const { confirm } = await Taro.showModal({
           title: "提示",
           showCancel: false,
@@ -62,6 +63,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
       }
       if (catchedCode.includes(res.statusCode)) {
         Taro.showToast({ icon: "none", title: ERROR_MAP[res.statusCode] });
+        return Promise.reject();
       } else {
         Taro.showToast({ icon: "none", title: res.errMsg });
         throw new FetchError(res.statusCode, res.errMsg);
