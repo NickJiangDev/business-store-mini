@@ -4,6 +4,7 @@ import { AtSearchBar, AtButton, AtIcon } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getShop, selectShop, findCard } from "@/services/index";
 import { initialState, reducer } from "./reducer";
+import { getPhoneHandler } from "@/helpers/getPhoneHandler";
 import "./index.scss";
 
 const NearShop: Taro.FunctionComponent = () => {
@@ -128,26 +129,22 @@ const NearShop: Taro.FunctionComponent = () => {
   const goto = async (code: string) => {
     try {
       await fetchSelcetApi({ shopcode: code });
+      Taro.navigateTo({
+        url: "/pages/bindPhone/index"
+      });
+      return;
       findCardHandler();
     } catch (error) {}
   };
 
   const findCardHandler = async () => {
     try {
-      const phone = Taro.getStorageSync("phone");
-      if (phone) {
-        const { cardflag, cardid, cardno } = await fetchFindCardApi({
-          mobile: phone
-        });
-        debugger;
-        console.log(cardflag, cardid, cardno);
-      } else {
-        // 非法，直接清除缓存重新登录
-        Taro.setStorageSync("token", "");
-        Taro.setStorageSync("userinfo", {});
-        Taro.setStorageSync("phone", "");
-        Taro.reLaunch({ url: "/pages/index/index" });
-      }
+      const phone = getPhoneHandler();
+      const { cardflag, cardid, cardno } = await fetchFindCardApi({
+        mobile: phone
+      });
+      debugger;
+      console.log(cardflag, cardid, cardno);
       // Taro.navigateTo({
       //   url: "/pages/bindPhone/index"
       // });

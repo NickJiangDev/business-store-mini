@@ -1,16 +1,18 @@
-import Taro, { useState } from "@tarojs/taro";
-import { Button, View } from "@tarojs/components";
+import Taro, { useState, useEffect } from "@tarojs/taro";
+import { View } from "@tarojs/components";
 import { AtInput, AtButton } from "taro-ui";
-
+import { getPhoneHandler } from "@/helpers/getPhoneHandler";
 import Styles from "./index.module.scss";
 
 const BindPhone: Taro.FunctionComponent = () => {
   const [phone, setPhone] = useState("");
   const [card, setCard] = useState("");
 
-  const getPhoneNumber = (e: any) => {
-    console.log(e);
-  };
+  useEffect(() => {
+    const phone = getPhoneHandler();
+    setPhone(phone);
+  }, []);
+
   return (
     <View>
       <View style={{ backgroundColor: "#fff" }}>
@@ -21,15 +23,8 @@ const BindPhone: Taro.FunctionComponent = () => {
           placeholder="必填"
           value={phone || ""}
           onChange={(e: any) => setPhone(e.target.value)}
-        >
-          <Button
-            className={Styles.bindPhone}
-            open-type="getPhoneNumber"
-            onGetPhoneNumber={getPhoneNumber}
-          >
-            手机号授权
-          </Button>
-        </AtInput>
+          editable={false}
+        />
         <AtInput
           name="value"
           title="卡号"
