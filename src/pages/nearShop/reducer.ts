@@ -6,7 +6,8 @@ export const initialState = {
   longitude: 0,
   pagesize: 10,
   noMoreData: false,
-  list: []
+  list: [],
+  selectstore: {}
 };
 
 export function reducer(state: any, action: any) {
@@ -38,12 +39,22 @@ export function reducer(state: any, action: any) {
         ...state,
         list: state.list.concat(action.list)
       };
+    case "selcetstore":
+      return {
+        ...state,
+        selectstore: action.selectstore
+      };
     case "updateList":
       return {
         ...state,
         list: action.list
       };
     case "noMoreData":
+      return {
+        ...state,
+        noMoreData: true
+      };
+    case "noMoreDataInit":
       return {
         ...state,
         noMoreData: true,

@@ -1,0 +1,13 @@
+@import "../../theme/Variables.scss";
+
+.btn {
+  margin: 20vh 10vw;
+}
+
+.bindPhone {
+  font-size: 24px !important;
+  border: none;
+  height: 50px;
+  background-color: #fff;
+  color: $color-brand;
+}

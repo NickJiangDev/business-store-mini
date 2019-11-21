@@ -1,7 +1,7 @@
 import Taro from "@tarojs/taro";
 import { AtButton } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getLogin, getUnionId } from "@/services/index";
+import { getLogin, getUnionId, findCard } from "@/services/index";
 
 const LoginButton = () => {
   // 登录授权回调
@@ -9,6 +9,7 @@ const LoginButton = () => {
   const [{ loading: unionIdLoading }, fetchUnionId] = useAsyncFn<any>(
     getUnionId
   );
+  const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
   const setUserInfo = (res: any) => {
     const { encryptedData, iv } = res.detail;
     const userInfo = res.detail.userInfo;
@@ -37,9 +38,15 @@ const LoginButton = () => {
     }
   };
 
-  const successHandler = (userInfo: any, token: string) => {
+  const successHandler = async (userInfo: any, token: string) => {
+    const phone = "15641706680";
     Taro.setStorageSync("userInfo", userInfo);
     Taro.setStorageSync("token", token);
+    Taro.setStorageSync("phone", phone);
+
+    const { cardflag, cardid, cardno } = await fetchFindCardApi({
+      mobile: phone
+    });
     Taro.redirectTo({
       url: "/pages/nearShop/index"
     });

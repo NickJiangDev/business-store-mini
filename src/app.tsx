@@ -35,6 +35,7 @@ class App extends Component {
       "pages/pay/index",
       "pages/cardCenter/index",
       "pages/integral/index",
+      "pages/bindPhone/index",
       "pages/loginAgreement/index"
     ],
     permission: {

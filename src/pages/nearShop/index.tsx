@@ -1,15 +1,26 @@
 import Taro, { useEffect, useReachBottom, useReducer } from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import { AtSearchBar, AtButton } from "taro-ui";
+import { AtSearchBar, AtButton, AtIcon } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getShop } from "@/services/index";
+import { getShop, selectShop, findCard } from "@/services/index";
 import { initialState, reducer } from "./reducer";
 import "./index.scss";
 
 const NearShop: Taro.FunctionComponent = () => {
   const [, fetctShopApi] = useAsyncFn<any>(getShop);
+  const [, fetchSelcetApi] = useAsyncFn<any>(selectShop);
+  const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
   const [
-    { pageindex, pagesize, inputValue, longitude, latitude, noMoreData, list },
+    {
+      pageindex,
+      pagesize,
+      inputValue,
+      longitude,
+      latitude,
+      noMoreData,
+      list,
+      selectstore
+    },
     dispatch
   ] = useReducer(reducer, initialState);
 
@@ -29,8 +40,12 @@ const NearShop: Taro.FunctionComponent = () => {
           longitude: res.longitude
         }).then((listRes: any) => {
           Taro.hideLoading();
-          if (listRes.length) {
-            dispatch({ type: "concatList", list: listRes });
+          dispatch({ type: "selcetstore", selectstore: listRes.selectstore });
+          if (listRes.storelist.length) {
+            dispatch({
+              type: "concatList",
+              list: listRes.storelist
+            });
           } else {
             dispatch({ type: "noMoreData" });
           }
@@ -44,8 +59,12 @@ const NearShop: Taro.FunctionComponent = () => {
           longitude: longitude
         }).then((listRes: any) => {
           Taro.hideLoading();
-          if (listRes.length) {
-            dispatch({ type: "concatList", list: listRes });
+          if (listRes.storelist.length) {
+            dispatch({ type: "selcetstore", selectstore: listRes.selectstore });
+            dispatch({
+              type: "concatList",
+              list: listRes.storelist
+            });
           } else {
             dispatch({ type: "noMoreData" });
           }
@@ -62,10 +81,16 @@ const NearShop: Taro.FunctionComponent = () => {
         pagesize,
         pageindex: pageindex + 1,
         latitude: latitude,
-        longitude: longitude
+        longitude: longitude,
+        keyword: inputValue
       }).then((listRes: any) => {
-        if (listRes.length) {
-          dispatch({ type: "concatList", list: listRes });
+        Taro.hideLoading();
+        dispatch({ type: "selcetstore", selectstore: listRes.selectstore });
+        if (listRes.storelist.length) {
+          dispatch({
+            type: "concatList",
+            list: listRes.storelist
+          });
         } else {
           dispatch({ type: "noMoreData" });
         }
@@ -84,10 +109,14 @@ const NearShop: Taro.FunctionComponent = () => {
       keyword: inputValue
     }).then((listRes: any) => {
       Taro.hideLoading();
-      if (listRes.length) {
-        dispatch({ type: "updateList", list: listRes });
+      dispatch({ type: "selcetstore", selectstore: listRes.selectstore });
+      if (listRes.storelist.length) {
+        dispatch({
+          type: "updateList",
+          list: listRes.storelist
+        });
       } else {
-        dispatch({ type: "noMoreData" });
+        dispatch({ type: "noMoreDataInit" });
       }
     });
   };
@@ -96,11 +125,35 @@ const NearShop: Taro.FunctionComponent = () => {
     dispatch({ type: "onChange", value });
   };
 
-  const goto = () => {
-    Taro.navigateTo({
-      url: "/pages/card/index"
-    });
+  const goto = async (code: string) => {
+    try {
+      await fetchSelcetApi({ shopcode: code });
+      findCardHandler();
+    } catch (error) {}
   };
+
+  const findCardHandler = async () => {
+    try {
+      const phone = Taro.getStorageSync("phone");
+      if (phone) {
+        const { cardflag, cardid, cardno } = await fetchFindCardApi({
+          mobile: phone
+        });
+        debugger;
+        console.log(cardflag, cardid, cardno);
+      } else {
+        // 非法，直接清除缓存重新登录
+        Taro.setStorageSync("token", "");
+        Taro.setStorageSync("userinfo", {});
+        Taro.setStorageSync("phone", "");
+        Taro.reLaunch({ url: "/pages/index/index" });
+      }
+      // Taro.navigateTo({
+      //   url: "/pages/bindPhone/index"
+      // });
+    } catch (error) {}
+  };
+
   return (
     <View>
       <AtSearchBar
@@ -111,23 +164,57 @@ const NearShop: Taro.FunctionComponent = () => {
         value={inputValue}
         onActionClick={onSubmit}
       />
-      {list.map((item: any) => (
-        <View className="cell">
-          <View>
-            <Text className="title">{item.shopname}</Text>
-            <Text className="distance">{item.distance}</Text>
-            <Text className="address">{item.shopaddr}</Text>
-          </View>
-          <AtButton type="primary" className="btn" onClick={goto}>
-            选择
-          </AtButton>
+      <View className="near">
+        <View className="nTitle">
+          <Text>关注的门店</Text>
         </View>
-      ))}
-      {noMoreData && pageindex === 1 ? (
-        <View className="empty">暂无数据</View>
-      ) : (
-        false
-      )}
+        {!selectstore.shopcode ? (
+          <View className="empty">
+            <AtIcon value="shopping-bag" className="icon" />
+            您暂未关注门店
+          </View>
+        ) : (
+          <View className="cell">
+            <View>
+              <Text className="title">{selectstore.shopname}</Text>
+              <Text className="distance">{selectstore.distance}</Text>
+              <Text className="address">{selectstore.shopaddr}</Text>
+            </View>
+            <AtButton type="primary" className="btn" disabled={true}>
+              已关注
+            </AtButton>
+          </View>
+        )}
+      </View>
+      <View className="near">
+        <View className="nTitle">
+          <Text>附近的门店</Text>
+        </View>
+        {list.map((item: any, index: string) => (
+          <View className="cell" key={index}>
+            <View>
+              <Text className="title">{item.shopname}</Text>
+              <Text className="distance">{item.distance}</Text>
+              <Text className="address">{item.shopaddr}</Text>
+            </View>
+            <AtButton
+              type="primary"
+              className="btn"
+              onClick={() => goto(item.shopcode)}
+            >
+              关注
+            </AtButton>
+          </View>
+        ))}
+        {noMoreData && pageindex === 1 ? (
+          <View className="empty">
+            <AtIcon value="shopping-bag" className="icon" />
+            暂无数据
+          </View>
+        ) : (
+          false
+        )}
+      </View>
     </View>
   );
 };

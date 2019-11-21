@@ -49,6 +49,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
 
     if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
       if (overdueCode.includes(res.statusCode)) {
+        Taro.hideLoading();
         const { confirm } = await Taro.showModal({
           title: "提示",
           showCancel: false,
@@ -56,7 +57,9 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
           confirmText: "重新登录"
         });
         if (confirm) {
-          // Taro.setStorageSync("token", "");
+          Taro.setStorageSync("token", "");
+          Taro.setStorageSync("userinfo", {});
+          Taro.setStorageSync("phone", "");
           Taro.reLaunch({ url: "/pages/index/index" });
         }
         return;

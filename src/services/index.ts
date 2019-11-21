@@ -56,4 +56,34 @@ function getShop(params: IShopParams) {
   return http.post({ model: "sys", action: "nearstore" }, params);
 }
 
-export { getLogin, getUnionId, getLoginAgreement, getShop };
+interface ISelectParams {
+  shopcode: string;
+}
+/**
+ * 关注门店
+ * @param {ISelectParams} params
+ * @returns
+ */
+function selectShop(params: ISelectParams) {
+  return http.post({ model: "sys", action: "selectstore" }, params);
+}
+
+interface IFindcardParams {
+  shopcode: string;
+}
+/**
+ * 关注门店
+ * @param {IFindcardParams} params
+ * @returns
+ */
+function findCard(params: IFindcardParams) {
+  return http.post({ model: "sys", action: "verifymemband" }, params);
+}
+export {
+  getLogin,
+  getUnionId,
+  getLoginAgreement,
+  getShop,
+  selectShop,
+  findCard
+};
