@@ -37,9 +37,16 @@ class Index extends Component {
     const token = Taro.getStorageSync("token");
 
     if (token) {
-      Taro.redirectTo({
-        url: "/pages/nearShop/index"
-      });
+      Taro.checkSession()
+        .then(() => {
+          Taro.redirectTo({
+            url: "/pages/nearShop/index"
+          });
+        })
+        .catch(() => {
+          this.props.indexStore.noLogin();
+          Taro.hideLoading();
+        });
     } else {
       this.props.indexStore.noLogin();
       Taro.hideLoading();

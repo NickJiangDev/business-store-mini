@@ -46,7 +46,8 @@ export function reducer(state: any, action: any) {
     case "noMoreData":
       return {
         ...state,
-        noMoreData: true
+        noMoreData: true,
+        list: []
       };
     default:
       return state;

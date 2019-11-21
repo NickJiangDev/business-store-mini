@@ -4,6 +4,15 @@
 @import "~taro-ui/dist/style/components/icon.scss";
 @import "~taro-ui/dist/style/components/list.scss";
 
+.at-search-bar__input {
+  height: 76px !important;
+  padding: 0 60px 0 60px;
+}
+
+.search {
+  line-height: 60px;
+}
+
 .cell {
   display: flex;
   justify-content: space-between;

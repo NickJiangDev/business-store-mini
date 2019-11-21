@@ -28,13 +28,13 @@ const NearShop: Taro.FunctionComponent = () => {
           latitude: res.latitude,
           longitude: res.longitude
         }).then((listRes: any) => {
+          Taro.hideLoading();
           if (listRes.length) {
             dispatch({ type: "concatList", list: listRes });
           } else {
             dispatch({ type: "noMoreData" });
           }
         });
-        Taro.hideLoading();
       },
       fail: () => {
         fetctShopApi({
@@ -43,13 +43,13 @@ const NearShop: Taro.FunctionComponent = () => {
           latitude: latitude,
           longitude: longitude
         }).then((listRes: any) => {
+          Taro.hideLoading();
           if (listRes.length) {
             dispatch({ type: "concatList", list: listRes });
           } else {
             dispatch({ type: "noMoreData" });
           }
         });
-        Taro.hideLoading();
       }
     });
   }, []);
@@ -70,12 +70,12 @@ const NearShop: Taro.FunctionComponent = () => {
           dispatch({ type: "noMoreData" });
         }
       });
-      Taro.hideLoading();
     }
   });
 
   const onSubmit = () => {
     dispatch({ type: "pageInit" });
+    Taro.showLoading({ title: "加载中...", mask: true });
     fetctShopApi({
       pagesize,
       pageindex: 1,
@@ -83,6 +83,7 @@ const NearShop: Taro.FunctionComponent = () => {
       longitude: longitude,
       keyword: inputValue
     }).then((listRes: any) => {
+      Taro.hideLoading();
       if (listRes.length) {
         dispatch({ type: "updateList", list: listRes });
       } else {
@@ -94,9 +95,16 @@ const NearShop: Taro.FunctionComponent = () => {
   const onChange = (value: string) => {
     dispatch({ type: "onChange", value });
   };
+
+  const goto = () => {
+    Taro.navigateTo({
+      url: "/pages/card/index"
+    });
+  };
   return (
     <View>
       <AtSearchBar
+        className="search"
         showActionButton
         placeholder="请输入门店名称"
         onChange={onChange}
@@ -110,12 +118,12 @@ const NearShop: Taro.FunctionComponent = () => {
             <Text className="distance">{item.distance}</Text>
             <Text className="address">{item.shopaddr}</Text>
           </View>
-          <AtButton type="primary" className="btn">
+          <AtButton type="primary" className="btn" onClick={goto}>
             选择
           </AtButton>
         </View>
       ))}
-      {!list.length && pageindex === 1 ? (
+      {noMoreData && pageindex === 1 ? (
         <View className="empty">暂无数据</View>
       ) : (
         false
