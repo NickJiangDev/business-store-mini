@@ -58,7 +58,6 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
         });
         if (confirm) {
           Taro.setStorageSync("token", "");
-          Taro.setStorageSync("userinfo", {});
           Taro.setStorageSync("phone", "");
           Taro.reLaunch({ url: "/pages/index/index" });
         }

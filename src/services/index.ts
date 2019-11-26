@@ -18,6 +18,21 @@ function getLogin(params: ILoginParams) {
   );
 }
 
+interface IPhoneParams {
+  openid: string;
+  iv: string;
+  encrypteddata: string;
+  cloudid: string;
+}
+/**
+ * 手机号授权
+ * @param {IPhoneParams} params
+ * @returns
+ */
+function getPhone(params: IPhoneParams) {
+  return http.post({ model: "login", action: "getphone" }, params);
+}
+
 interface IUnionParams {
   openid: string;
   iv: string;
@@ -77,13 +92,55 @@ interface IFindcardParams {
  * @returns
  */
 function findCard(params: IFindcardParams) {
-  return http.post({ model: "sys", action: "verifymemband" }, params);
+  return http.post({ model: "mem", action: "verifymemband" }, params);
 }
+
+interface ICardParams {
+  cardid: string;
+}
+/**
+ * 查询会员卡面配置参数
+ * @param {ICardParams} params
+ * @returns
+ */
+function getCardInfo(params: ICardParams) {
+  return http.post({ model: "mem", action: "cardsurface" }, params);
+}
+
+interface ICustomNumParams {
+  cardno: string;
+  paycode: string;
+}
+/**
+ * 储值消费码
+ * @param {ICustomNumParams} params
+ * @returns
+ */
+function getCustomNum(params: ICustomNumParams) {
+  return http.post({ model: "mem", action: "generpaycode" }, params);
+}
+
+interface ICardInfoParams {
+  cardno: string;
+}
+/**
+ * 查询会员信息
+ * @param {ICardInfoParams} params
+ * @returns
+ */
+function getCardData(params: ICardInfoParams) {
+  return http.post({ model: "mem", action: "querymeminfo" }, params);
+}
+
 export {
   getLogin,
+  getPhone,
   getUnionId,
   getLoginAgreement,
   getShop,
   selectShop,
-  findCard
+  findCard,
+  getCardInfo,
+  getCustomNum,
+  getCardData
 };

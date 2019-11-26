@@ -6,6 +6,7 @@ import { getShop, selectShop, findCard } from "@/services/index";
 import { initialState, reducer } from "./reducer";
 import { getPhoneHandler } from "@/helpers/getPhoneHandler";
 import "./index.scss";
+import findHandler from "@/helpers/findHandler";
 
 const NearShop: Taro.FunctionComponent = () => {
   const [, fetctShopApi] = useAsyncFn<any>(getShop);
@@ -140,14 +141,10 @@ const NearShop: Taro.FunctionComponent = () => {
   const findCardHandler = async () => {
     try {
       const phone = getPhoneHandler();
-      const { cardflag, cardid, cardno } = await fetchFindCardApi({
+      const cardData = await fetchFindCardApi({
         mobile: phone
       });
-      debugger;
-      console.log(cardflag, cardid, cardno);
-      // Taro.navigateTo({
-      //   url: "/pages/bindPhone/index"
-      // });
+      findHandler(cardData);
     } catch (error) {}
   };
 
@@ -171,7 +168,7 @@ const NearShop: Taro.FunctionComponent = () => {
             您暂未关注门店
           </View>
         ) : (
-          <View className="cell">
+          <View className="cell" style={{ border: "none" }}>
             <View>
               <Text className="title">{selectstore.shopname}</Text>
               <Text className="distance">{selectstore.distance}</Text>

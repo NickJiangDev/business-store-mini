@@ -1,7 +1,8 @@
 import Taro from "@tarojs/taro";
 import { AtButton } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getLogin, getUnionId, findCard } from "@/services/index";
+import { getLogin, getUnionId, findCard, getPhone } from "@/services/index";
+import findHandler from "@/helpers/findHandler";
 
 const LoginButton = () => {
   // 登录授权回调
@@ -10,10 +11,10 @@ const LoginButton = () => {
     getUnionId
   );
   const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
+  // const [, fetchGetPhone] = useAsyncFn<any>(getPhone);
   const setUserInfo = (res: any) => {
-    const { encryptedData, iv } = res.detail;
-    const userInfo = res.detail.userInfo;
-    if (userInfo) {
+    const { encryptedData, iv, cloudID } = res.detail;
+    if (encryptedData && iv && cloudID) {
       // 成功
       Taro.login({
         async success(res) {
@@ -25,7 +26,13 @@ const LoginButton = () => {
                 encrypteddata: encryptedData,
                 iv
               });
-              successHandler(userInfo, accesstoken);
+              // const { purephonenumber } = await fetchGetPhone({
+              //   openid,
+              //   encrypteddata: encryptedData,
+              //   iv,
+              //   cloudid: cloudID
+              // });
+              successHandler(accesstoken, "15641706680");
             } else {
               console.log("登录失败！" + res.errMsg);
             }
@@ -38,18 +45,14 @@ const LoginButton = () => {
     }
   };
 
-  const successHandler = async (userInfo: any, token: string) => {
-    const phone = "15641706680";
-    Taro.setStorageSync("userInfo", userInfo);
+  const successHandler = async (token: string, phone: string) => {
     Taro.setStorageSync("token", token);
     Taro.setStorageSync("phone", phone);
 
-    const { cardflag, cardid, cardno } = await fetchFindCardApi({
+    const cardData = await fetchFindCardApi({
       mobile: phone
     });
-    Taro.redirectTo({
-      url: "/pages/nearShop/index"
-    });
+    findHandler(cardData);
   };
   return (
     <AtButton

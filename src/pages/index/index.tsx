@@ -2,22 +2,23 @@ import Taro, { useEffect, useState } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import LoginButton from "../../components/LoginButton";
 import namedPng from "@/assets/images/images.png";
-
+import useAsyncFn from "@/shared/useAsyncFn";
+import { findCard } from "@/services/index";
 import Styles from "./index.module.scss";
+import findHandler from "@/helpers/findHandler";
 
 const Index: Taro.FunctionComponent = () => {
+  const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
   const [noLogin, setNoLogin] = useState(true);
   useEffect(() => {
     Taro.showLoading({ title: "加载中....." });
     const token = Taro.getStorageSync("token");
-
-    if (token) {
-      // const { cardflag, cardid, cardno } = await fetchFindCardApi({mobile: phone});
-      Taro.checkSession()
-        .then(() => {
-          Taro.redirectTo({
-            url: "/pages/nearShop/index"
-          });
+    const phone = Taro.getStorageSync("phone");
+    if (token && phone) {
+      fetchFindCardApi({ mobile: phone })
+        .then((res: any) => {
+          findHandler(res);
+          Taro.hideLoading();
         })
         .catch(() => {
           setNoLogin(false);
