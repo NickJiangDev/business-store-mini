@@ -36,7 +36,7 @@ class App extends Component {
       "pages/cardCenter/index",
       "pages/integral/index",
       "pages/bindPhone/index",
-      "pages/loginAgreement/index"
+      "pages/agreement/index"
     ],
     permission: {
       "scope.userLocation": {

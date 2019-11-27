@@ -1,11 +1,25 @@
-import Taro, { useState } from "@tarojs/taro";
+import Taro, { useState, useEffect } from "@tarojs/taro";
 import { AtInput } from "taro-ui";
 import { View } from "@tarojs/components";
-
+import useAsyncFn from "@/shared/useAsyncFn";
+import { getPointApi } from "@/services/index";
 import Styles from "./index.module.scss";
 
 function Integral() {
   const [integral, setIntegral] = useState("");
+  // const [data, setData] = useState(defaultData);
+  const [, fetchPoint] = useAsyncFn<any>(getPointApi);
+
+  useEffect(() => {
+    getConfig();
+  }, []);
+
+  const getConfig = async () => {
+    fetchPoint().then((res: any) => {
+      // setData(res);
+      // setIntegral(res.)
+    });
+  };
   const integralOnchange = (e: any) => {
     const value = (e.target && e.target.value) || "";
     setIntegral(value);

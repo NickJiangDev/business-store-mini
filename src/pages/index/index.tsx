@@ -32,7 +32,7 @@ const Index: Taro.FunctionComponent = () => {
 
   const toAgreement = () => {
     Taro.navigateTo({
-      url: "/pages/loginAgreement/index"
+      url: "/pages/agreement/index?type=login"
     });
   };
 

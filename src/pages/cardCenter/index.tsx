@@ -1,20 +1,71 @@
-import Taro, { usePullDownRefresh, useReachBottom } from "@tarojs/taro";
+import Taro, { useReachBottom, useEffect, useReducer } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { AtProgress, AtButton } from "taro-ui";
-
+import useAsyncFn from "@/shared/useAsyncFn";
+import { getCenterList } from "@/services/index";
 import Styles from "./index.module.scss";
 
-const CardCenter: Taro.FunctionComponent = () => {
-  usePullDownRefresh(() => {
-    debugger;
-  });
+// useReducer
+const initialState = {
+  pageindex: 1,
+  pagesize: 10,
+  noMoreData: false,
+  list: []
+};
 
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case "pageUpdate":
+      return {
+        ...state,
+        pageindex: action.pageindex
+      };
+    case "concatData":
+      return {
+        ...state,
+        list: state.list.concat(action.data)
+      };
+    case "noMore":
+      return {
+        ...state,
+        noMoreData: true
+      };
+    default:
+      return state;
+  }
+}
+
+const CardCenter: Taro.FunctionComponent = () => {
+  const [{ pageindex, pagesize, noMoreData, list }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+
+  useEffect(() => {
+    fetchApi({ pageindex, pagesize });
+  }, []);
+
+  const fetchApi = async (params: any) => {
+    Taro.showLoading({ title: "加载中...", mask: true });
+    await getCenterList(params).then((res: any) => {
+      if (!res.couponlist.length) {
+        dispatch({ type: "noMore" });
+      }
+      dispatch({ type: "concatData", data: res.couponlist });
+    });
+    Taro.hideLoading();
+  };
   useReachBottom(() => {
-    debugger;
+    if (noMoreData) {
+      return;
+    }
+    const newPageindex = pageindex + 1;
+    dispatch({ type: "pageUpdate", pageindex: newPageindex });
+    fetchApi({ pagesize, pageindex: newPageindex });
   });
   return (
     <View className={Styles.pages}>
-      {Array(3)
+      {Array(13)
         .fill("")
         .map(() => {
           return (
@@ -43,7 +94,7 @@ const CardCenter: Taro.FunctionComponent = () => {
 
 CardCenter.config = {
   navigationBarTitleText: "领劵中心",
-  enablePullDownRefresh: true,
+  // enablePullDownRefresh: true,
   onReachBottomDistance: 50,
   backgroundTextStyle: "dark"
 };

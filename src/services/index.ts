@@ -132,15 +132,79 @@ function getCardData(params: ICardInfoParams) {
   return http.post({ model: "mem", action: "querymeminfo" }, params);
 }
 
+interface IOrderInfoParams {
+  coupontype: number;
+  pageindex: number;
+  pagesize: number;
+}
+/**
+ * 我的券
+ * @param {IOrderInfoParams} params
+ * @returns
+ */
+function getOrderApi(params: IOrderInfoParams) {
+  return http.post({ model: "mem", action: "myconpons" }, params);
+}
+
+interface ICalendarRoleParams {
+  cardno: string;
+}
+/**
+ * 签到规则
+ * @param {ICalendarRoleParams} params
+ * @returns
+ */
+function getCalendarRoleApi(params: ICalendarRoleParams) {
+  return http.post({ model: "mem", action: "signinfo" }, params);
+}
+
+interface ISignParams {
+  cardno: string;
+}
+/**
+ * 签到
+ * @param {ISignParams} params
+ * @returns
+ */
+function signApi(params: ISignParams) {
+  return http.post({ model: "mem", action: "sign" }, params);
+}
+
+/**
+ * 积分规则
+ * @returns
+ */
+function getPointApi() {
+  return http.post({ model: "mem", action: "pointexchangeinfo" });
+}
+
+interface ICenterParams {
+  pagesize: number;
+  pageindex: number;
+}
+/**
+ * 领劵中心
+ * @param {ICenterParams} params
+ * @returns
+ */
+function getCenterList(params: ICenterParams) {
+  return http.post({ model: "mem", action: "couponclaim" }, params);
+}
+
 export {
   getLogin,
   getPhone,
   getUnionId,
   getLoginAgreement,
+  getCalendarRoleApi,
   getShop,
   selectShop,
   findCard,
   getCardInfo,
   getCustomNum,
-  getCardData
+  getCardData,
+  getOrderApi,
+  signApi,
+  getPointApi,
+  getCenterList
 };
