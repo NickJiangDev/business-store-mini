@@ -29,12 +29,12 @@ const initialState = {
     pagesize: 10,
     coupontype: 3
   },
-  data1: [],
-  data2: [],
-  data3: [],
   hasMore1: true,
   hasMore2: true,
   hasMore3: true,
+  data1: [],
+  data2: [],
+  data3: [],
   count: 0
 };
 function reducer(state: any, action: any) {
@@ -64,6 +64,16 @@ function reducer(state: any, action: any) {
       return {
         ...state,
         [`hasMore${state.count + 1}`]: false
+      };
+    case "reset":
+      return {
+        ...state,
+        pageParams1: initialState.pageParams1,
+        pageParams2: initialState.pageParams2,
+        pageParams3: initialState.pageParams3,
+        hasMore1: initialState.hasMore1,
+        hasMore2: initialState.hasMore2,
+        hasMore3: initialState.hasMore3
       };
     default:
       return state;
@@ -104,7 +114,6 @@ const Order: Taro.FunctionComponent = () => {
     }
   };
 
-  console.log(data1, hasMore1);
   const [, getOrder] = useAsyncFn<any>(getOrderApi);
   // usePullDownRefresh(() => {
   //   debugger;
@@ -112,6 +121,7 @@ const Order: Taro.FunctionComponent = () => {
 
   useReachBottom(() => {
     if (paramsObj[count].hasMore) {
+      Taro.showLoading({ title: "加载中...", mask: true });
       const newPageindex = paramsObj[count].params.pageindex + 1;
       dispatch({ type: "updateParams", pageindex: newPageindex });
       getOrder({ ...paramsObj[count].params, pageindex: newPageindex }).then(
@@ -121,14 +131,18 @@ const Order: Taro.FunctionComponent = () => {
             dispatch({ type: "hasMoreUpdate" });
           }
           dispatch({ type: "updateData", data });
+          Taro.hideLoading();
         }
       );
     }
   });
 
   useEffect(() => {
-    getOrder(paramsObj[count].params).then((res: any) => {
+    dispatch({ type: "reset" });
+    Taro.showLoading({ title: "加载中...", mask: true });
+    getOrder({ ...paramsObj[count].params, pageindex: 1 }).then((res: any) => {
       dispatch({ type: "updateData", data: res.couponlist });
+      Taro.hideLoading();
     });
   }, [count]);
 

@@ -1,4 +1,4 @@
-import Taro from "@tarojs/taro";
+import Taro, { useState } from "@tarojs/taro";
 import { AtButton } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getLogin, getUnionId, findCard, getPhone } from "@/services/index";
@@ -10,8 +10,15 @@ const LoginButton = () => {
   const [{ loading: unionIdLoading }, fetchUnionId] = useAsyncFn<any>(
     getUnionId
   );
-  const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
-  // const [, fetchGetPhone] = useAsyncFn<any>(getPhone);
+  const [{ loading: findCardLoading }, fetchFindCardApi] = useAsyncFn<any>(
+    findCard
+  );
+  const [{ loading: getPhoneLoading }, fetchGetPhone] = useAsyncFn<any>(
+    getPhone
+  );
+
+  const [loginInfo, setLoginInfo] = useState({ openid: "", accesstoken: "" });
+  const [isLogin, setIsLogin] = useState(false);
   const setUserInfo = (res: any) => {
     const { encryptedData, iv, cloudID } = res.detail;
     if (encryptedData && iv && cloudID) {
@@ -26,13 +33,10 @@ const LoginButton = () => {
                 encrypteddata: encryptedData,
                 iv
               });
-              // const { purephonenumber } = await fetchGetPhone({
-              //   openid,
-              //   encrypteddata: encryptedData,
-              //   iv,
-              //   cloudid: cloudID
-              // });
-              successHandler(accesstoken, "15641706680");
+
+              setLoginInfo({ accesstoken, openid });
+              setIsLogin(true);
+              Taro.showToast({ icon: "none", title: "登录成功，请继续登录" });
             } else {
               console.log("登录失败！" + res.errMsg);
             }
@@ -45,6 +49,21 @@ const LoginButton = () => {
     }
   };
 
+  const numberLogin = async (res: any) => {
+    try {
+      const { encryptedData, iv, cloudID } = res.detail;
+      if (encryptedData && iv && cloudID) {
+        const { purephonenumber } = await fetchGetPhone({
+          openid: loginInfo.openid,
+          encrypteddata: encryptedData,
+          iv,
+          cloudid: cloudID
+        });
+        successHandler(loginInfo.accesstoken, purephonenumber);
+      }
+    } catch (error) {}
+  };
+
   const successHandler = async (token: string, phone: string) => {
     Taro.setStorageSync("token", token);
     Taro.setStorageSync("phone", phone);
@@ -54,20 +73,27 @@ const LoginButton = () => {
     });
     findHandler(cardData);
   };
+
+  const commonParams = !isLogin
+    ? {
+        onGetUserInfo: setUserInfo
+      }
+    : {
+        onGetPhoneNumber: numberLogin
+      };
   return (
     <AtButton
       type="primary"
-      loading={loading || unionIdLoading}
-      openType="getUserInfo"
-      onGetUserInfo={setUserInfo}
+      loading={loading || unionIdLoading || findCardLoading || getPhoneLoading}
+      openType={isLogin ? "getPhoneNumber" : "getUserInfo"}
+      {...commonParams}
     >
       授权获取用户信息
     </AtButton>
     // <AtButton
     //   className="index"
     //   type="primary"
-    //   openType="getPhoneNumber"
-    //   onGetPhoneNumber={this.numberLogin}
+
     // >
     //   微信手机授权登录
     // </AtButton>

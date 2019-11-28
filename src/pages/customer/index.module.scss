@@ -1,19 +1,23 @@
 .barcode {
   display: flex;
-  margin-top: 50px;
+  margin: 50px auto;
   width: 100vw;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
 
 .balance {
-  width: 100vw;
-  height: 30vh;
-  background-color: red;
+  display: flex;
+  flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  padding: 3vh 3vw;
+  margin: 20px;
+  border-radius: 12px;
+  height: 24vh;
+  background-color: red;
 
   .p {
     color: #fff;

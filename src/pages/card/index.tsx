@@ -46,6 +46,12 @@ const Card: Taro.FunctionComponent = () => {
     } catch (error) {}
   };
 
+  const toCustomer = () => {
+    Taro.navigateTo({
+      url: "/pages/customer/index"
+    });
+  };
+
   const toPay = () => {
     Taro.navigateTo({
       url: "/pages/pay/index"
@@ -92,13 +98,12 @@ const Card: Taro.FunctionComponent = () => {
     });
   };
 
-  const viewStyles = cx({
+  const viewStyles = {
     [Styles.view]: true,
-    [Styles.view0]: cellLength === 0,
     [Styles.view1]: cellLength === 1,
     [Styles.view2]: cellLength === 2,
     [Styles.view3]: cellLength === 3
-  });
+  };
   return (
     <View>
       <View className={Styles.sign}>
@@ -114,19 +119,34 @@ const Card: Taro.FunctionComponent = () => {
       </View>
       <View className={Styles.op}>
         <View>
-          <View className={viewStyles}>
+          <View
+            className={cx({
+              ...viewStyles,
+              [Styles.view0]: !skeletonValue.supply_bonus
+            })}
+          >
             <View>积分</View>
             <View className={Styles.primary}>{infoData.point}</View>
           </View>
         </View>
         <View>
-          <View className={viewStyles}>
+          <View
+            className={cx({
+              ...viewStyles,
+              [Styles.view0]: !skeletonValue.supply_balance
+            })}
+          >
             <View>金额</View>
             <View className={Styles.primary}>{infoData.money}</View>
           </View>
         </View>
         <View>
-          <View className={viewStyles}>
+          <View
+            className={cx({
+              ...viewStyles,
+              [Styles.view0]: !skeletonValue.supply_coupon
+            })}
+          >
             <View>优惠券</View>
             <View className={Styles.primary}>查看</View>
           </View>
@@ -141,7 +161,11 @@ const Card: Taro.FunctionComponent = () => {
         false
       )}
       <AtList>
-        <AtListItem title="储值与消费" extraText="储值卡消费" />
+        <AtListItem
+          title="储值与消费"
+          extraText="储值卡消费"
+          onClick={toCustomer}
+        />
         <AtListItem title="优惠券" extraText="优惠券" onClick={toOrder} />
         <AtListItem title="充值" extraText="充值" onClick={toPay} />
         <AtListItem

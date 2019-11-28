@@ -162,7 +162,7 @@ const NearShop: Taro.FunctionComponent = () => {
         <View className="nTitle">
           <Text>关注的门店</Text>
         </View>
-        {!selectstore.shopcode ? (
+        {!(selectstore && selectstore.shopcode) ? (
           <View className="empty">
             <AtIcon value="shopping-bag" className="icon" />
             您暂未关注门店

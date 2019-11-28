@@ -1,9 +1,17 @@
 import http from "@/helpers/http";
 
+/*
+ * 获取首页参数
+ * @returns
+ */
+function getHome() {
+  return http.post({ model: "sys", action: "index" });
+}
+
 interface ILoginParams {
   jscode: string;
 }
-/**
+/*
  * 登录授权
  * @param {ILoginParams} params
  * @returns
@@ -24,7 +32,7 @@ interface IPhoneParams {
   encrypteddata: string;
   cloudid: string;
 }
-/**
+/*
  * 手机号授权
  * @param {IPhoneParams} params
  * @returns
@@ -38,7 +46,7 @@ interface IUnionParams {
   iv: string;
   encrypteddata: string;
 }
-/**
+/*
  * 获取unionId
  * @param {IUnionParams} params
  * @returns
@@ -47,7 +55,7 @@ function getUnionId(params: IUnionParams) {
   return http.post({ model: "login", action: "getunionid" }, params);
 }
 
-/**
+/*
  * 获取注册协议
  * @returns
  */
@@ -62,7 +70,7 @@ interface IShopParams {
   longitude?: number;
   keywords?: string;
 }
-/**
+/*
  * 获取附近门店
  * @param {IShopParams} params
  * @returns
@@ -74,7 +82,7 @@ function getShop(params: IShopParams) {
 interface ISelectParams {
   shopcode: string;
 }
-/**
+/*
  * 关注门店
  * @param {ISelectParams} params
  * @returns
@@ -86,7 +94,7 @@ function selectShop(params: ISelectParams) {
 interface IFindcardParams {
   shopcode: string;
 }
-/**
+/*
  * 关注门店
  * @param {IFindcardParams} params
  * @returns
@@ -98,7 +106,7 @@ function findCard(params: IFindcardParams) {
 interface ICardParams {
   cardid: string;
 }
-/**
+/*
  * 查询会员卡面配置参数
  * @param {ICardParams} params
  * @returns
@@ -111,7 +119,7 @@ interface ICustomNumParams {
   cardno: string;
   paycode: string;
 }
-/**
+/*
  * 储值消费码
  * @param {ICustomNumParams} params
  * @returns
@@ -123,7 +131,7 @@ function getCustomNum(params: ICustomNumParams) {
 interface ICardInfoParams {
   cardno: string;
 }
-/**
+/*
  * 查询会员信息
  * @param {ICardInfoParams} params
  * @returns
@@ -137,7 +145,7 @@ interface IOrderInfoParams {
   pageindex: number;
   pagesize: number;
 }
-/**
+/*
  * 我的券
  * @param {IOrderInfoParams} params
  * @returns
@@ -149,7 +157,7 @@ function getOrderApi(params: IOrderInfoParams) {
 interface ICalendarRoleParams {
   cardno: string;
 }
-/**
+/*
  * 签到规则
  * @param {ICalendarRoleParams} params
  * @returns
@@ -161,7 +169,7 @@ function getCalendarRoleApi(params: ICalendarRoleParams) {
 interface ISignParams {
   cardno: string;
 }
-/**
+/*
  * 签到
  * @param {ISignParams} params
  * @returns
@@ -170,7 +178,7 @@ function signApi(params: ISignParams) {
   return http.post({ model: "mem", action: "sign" }, params);
 }
 
-/**
+/*
  * 积分规则
  * @returns
  */
@@ -178,11 +186,24 @@ function getPointApi() {
   return http.post({ model: "mem", action: "pointexchangeinfo" });
 }
 
+interface IBindParams {
+  mobile: string;
+  cardno: string;
+}
+/*
+ * 绑定会员卡
+ * @param {IBindParams} params
+ * @returns
+ */
+function bindCardApi(params: IBindParams) {
+  return http.post({ model: "mem", action: "bindcard" }, params);
+}
+
 interface ICenterParams {
   pagesize: number;
   pageindex: number;
 }
-/**
+/*
  * 领劵中心
  * @param {ICenterParams} params
  * @returns
@@ -192,6 +213,7 @@ function getCenterList(params: ICenterParams) {
 }
 
 export {
+  getHome,
   getLogin,
   getPhone,
   getUnionId,
@@ -206,5 +228,6 @@ export {
   getOrderApi,
   signApi,
   getPointApi,
-  getCenterList
+  getCenterList,
+  bindCardApi
 };

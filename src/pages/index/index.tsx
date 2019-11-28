@@ -3,15 +3,18 @@ import { View, Image, Text } from "@tarojs/components";
 import LoginButton from "../../components/LoginButton";
 import namedPng from "@/assets/images/images.png";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { findCard } from "@/services/index";
+import { findCard, getHome } from "@/services/index";
 import Styles from "./index.module.scss";
 import findHandler from "@/helpers/findHandler";
 
 const Index: Taro.FunctionComponent = () => {
   const [, fetchFindCardApi] = useAsyncFn<any>(findCard);
+  const [{ value }, getConfig] = useAsyncFn<any>(getHome);
   const [noLogin, setNoLogin] = useState(true);
+
   useEffect(() => {
     Taro.showLoading({ title: "加载中....." });
+    getConfig();
     const token = Taro.getStorageSync("token");
     const phone = Taro.getStorageSync("phone");
     if (token && phone) {
@@ -35,7 +38,6 @@ const Index: Taro.FunctionComponent = () => {
       url: "/pages/agreement/index?type=login"
     });
   };
-
   return (
     <View className={Styles.index}>
       {/* <AtButton className="index" type="primary" onClick={this.toCard}>
@@ -73,7 +75,11 @@ const Index: Taro.FunctionComponent = () => {
         false
       ) : (
         <View>
-          <Image src={namedPng} mode="aspectFit" className={Styles.img} />
+          <Image
+            src={value && value.indexpic}
+            mode="aspectFit"
+            className={Styles.img}
+          />
           <LoginButton />
           <View className={Styles.agreement}>
             登录即代表您已阅读并同意

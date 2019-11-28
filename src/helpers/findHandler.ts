@@ -31,7 +31,7 @@ export const findHandler = (props: FindHandlerProps) => {
       redirectTo("/pages/card/index");
       break;
     case 2000:
-      redirectTo("/pages/nearshop/index");
+      redirectTo("/pages/nearShop/index");
       break;
     default:
       Taro.showToast({ icon: "none", title: "系统错误" });
