@@ -65,13 +65,21 @@ function Customer() {
         <View className={Styles.p}>余额</View>
         <View className={Styles.p}>￥20元</View>
       </View>
-      <View className={Styles.barcode} onClick={() => refresh("click")}>
-        <Barcode text={value.paycode} width={305} height={68} />
-        <Text>{value.paycode}</Text>
-      </View>
-      <View className={Styles.barcode} onClick={() => refresh("click")}>
-        <QRCode text={value.paycode} size={205} />
-      </View>
+      {value.paycode ? (
+        <View className={Styles.barcode} onClick={() => refresh("click")}>
+          <Barcode text={value.paycode} width={305} height={68} />
+          <Text>{value.paycode}</Text>
+        </View>
+      ) : (
+        false
+      )}
+      {value.paycode ? (
+        <View className={Styles.barcode} onClick={() => refresh("click")}>
+          <QRCode text={value.paycode} size={205} />
+        </View>
+      ) : (
+        false
+      )}
     </View>
   );
 }
