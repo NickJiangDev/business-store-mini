@@ -1,3 +1,5 @@
+@import "../../theme/Variables.scss";
+
 .sign {
   display: flex;
   flex-direction: column;
@@ -5,13 +7,13 @@
   align-items: center;
   width: 100vw;
   height: 30vh;
-  background-color: red;
+  background-color: $color-brand;
 
   .p {
     background-color: #fff;
     text-align: center;
     line-height: 200px;
-    color: red;
+    color: $color-brand;
     width: 200px;
     height: 200px;
     border-radius: 100%;

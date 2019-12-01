@@ -130,10 +130,6 @@ const NearShop: Taro.FunctionComponent = () => {
   const goto = async (code: string) => {
     try {
       await fetchSelcetApi({ shopcode: code });
-      Taro.navigateTo({
-        url: "/pages/bindPhone/index"
-      });
-      return;
       findCardHandler();
     } catch (error) {}
   };

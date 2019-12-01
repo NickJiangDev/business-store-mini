@@ -1,7 +1,9 @@
+@import "../../theme/Variables.scss";
+
 .balance {
   width: 100vw;
   height: 30vh;
-  background-color: red;
+  background-color: $color-brand;
   display: flex;
   justify-content: center;
   align-items: center;
