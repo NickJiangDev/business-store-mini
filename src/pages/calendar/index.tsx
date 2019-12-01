@@ -1,6 +1,6 @@
 import Taro, { useState, useEffect } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtCalendar } from "taro-ui";
+import { AtCalendar, AtFloatLayout } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getCalendarRoleApi, signApi } from "@/services/index";
 import Styles from "./index.module.scss";
@@ -17,6 +17,7 @@ const defaultData = {
 
 const Calendar: Taro.FunctionComponent = () => {
   const [data, setData] = useState(defaultData);
+  const [visible, setVisible] = useState(false);
   const [, fetchCalendar] = useAsyncFn<any>(getCalendarRoleApi);
   const [, fetchSign] = useAsyncFn<any>(signApi);
   useEffect(() => {
@@ -29,9 +30,7 @@ const Calendar: Taro.FunctionComponent = () => {
     );
   };
   const toRole = () => {
-    Taro.navigateTo({
-      url: "/pages/agreement/index?type=calendar"
-    });
+    setVisible(true);
   };
 
   const sign = async () => {
@@ -61,6 +60,15 @@ const Calendar: Taro.FunctionComponent = () => {
         <View className={Styles.span}>{data.signdata}</View>
       </View>
       <AtCalendar />
+      <AtFloatLayout
+        isOpened={visible}
+        title="签到规则"
+        onClose={() => setVisible(false)}
+      >
+        这是内容区 随你怎么写这是内容区 随你怎么写这是内容区
+        随你怎么写这是内容区 随你怎么写这是内容区 随你怎么写这是内容区
+        随你怎么写
+      </AtFloatLayout>
     </View>
   );
 };
