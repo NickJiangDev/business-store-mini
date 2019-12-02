@@ -1,13 +1,18 @@
 import Taro, { useState, useEffect } from "@tarojs/taro";
-import { AtInput } from "taro-ui";
+import { AtInput, AtButton } from "taro-ui";
 import { View } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getPointApi } from "@/services/index";
+import { getPointApi, exchangePointApi } from "@/services/index";
 import Styles from "./index.module.scss";
 
+const defaultData = {
+  datalist: [],
+  money: 0,
+  point: 0
+};
 function Integral() {
   const [integral, setIntegral] = useState("");
-  // const [data, setData] = useState(defaultData);
+  const [data, setData] = useState(defaultData);
   const [, fetchPoint] = useAsyncFn<any>(getPointApi);
 
   useEffect(() => {
@@ -16,20 +21,26 @@ function Integral() {
 
   const getConfig = async () => {
     fetchPoint().then((res: any) => {
-      // setData(res);
-      // setIntegral(res.)
+      setData(res);
     });
   };
   const integralOnchange = (e: any) => {
     const value = (e.target && e.target.value) || "";
     setIntegral(value);
   };
+  const pointExchange = async () => {
+    try {
+      Taro.showLoading({ title: "加载中...", mask: true });
+      await exchangePointApi({ point: integral });
+      Taro.showToast({ icon: "none", title: "兑换成功" });
+    } catch (error) {}
+  };
   return (
     <View className={Styles.page}>
       <AtInput
         name="积分"
         title="积分"
-        value={20}
+        value={data.point}
         editable={false}
         onChange={() => {}}
       ></AtInput>
@@ -47,6 +58,9 @@ function Integral() {
           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         </View>
       </View>
+      <AtButton type="primary" onClick={pointExchange}>
+        积分兑换
+      </AtButton>
     </View>
   );
 }

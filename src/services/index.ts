@@ -212,6 +212,16 @@ function getCenterList(params: ICenterParams) {
   return http.post({ model: "mem", action: "couponclaim" }, params);
 }
 
+interface IExchangeParams {}
+/*
+ * 积分储值兑换
+ * @param {IExchangeParams} params
+ * @returns
+ */
+function exchangePointApi(params: IExchangeParams) {
+  return http.post({ model: "mem", action: "pointexchange" }, params);
+}
+
 export {
   getHome,
   getLogin,
@@ -229,5 +239,6 @@ export {
   signApi,
   getPointApi,
   getCenterList,
-  bindCardApi
+  bindCardApi,
+  exchangePointApi
 };
