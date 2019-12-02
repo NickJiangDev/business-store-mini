@@ -105,7 +105,7 @@ const Card: Taro.FunctionComponent = () => {
     [Styles.view3]: cellLength === 3
   };
   return (
-    <View>
+    <View className={Styles.pages}>
       <View className={Styles.sign}>
         <View className={Styles.userCell}>
           <Image

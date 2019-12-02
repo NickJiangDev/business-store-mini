@@ -26,7 +26,6 @@ function Integral() {
   };
   return (
     <View className={Styles.page}>
-      <View className={Styles.title}>积分兑换</View>
       <AtInput
         name="积分"
         title="积分"

@@ -1,5 +1,10 @@
 @import "../../theme/Variables.scss";
 
+.pages {
+  min-height: 100vh;
+  background-color: #fff;
+  overflow: hidden;
+}
 .sign {
   .p {
     color: #fff;

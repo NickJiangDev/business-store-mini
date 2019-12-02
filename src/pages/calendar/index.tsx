@@ -15,6 +15,8 @@ const defaultData = {
   strategy: ""
 };
 
+const markArr = ["2019-12-1", "2019-12-2", "2019-12-3"];
+
 const Calendar: Taro.FunctionComponent = () => {
   const [data, setData] = useState(defaultData);
   const [visible, setVisible] = useState(false);
@@ -59,7 +61,11 @@ const Calendar: Taro.FunctionComponent = () => {
         )}
         <View className={Styles.span}>{data.signdata}</View>
       </View>
-      <AtCalendar />
+      <AtCalendar
+        marks={markArr.map((date: string) => {
+          return { value: date };
+        })}
+      />
       <AtFloatLayout
         isOpened={visible}
         title="签到规则"
