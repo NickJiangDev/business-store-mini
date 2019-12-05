@@ -2,7 +2,7 @@ import Taro, { useState, useEffect } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { AtCalendar, AtFloatLayout } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getCalendarRoleApi, signApi } from "@/services/index";
+import { getCalendarRoleApi, signApi, getDateApi } from "@/services/index";
 import Styles from "./index.module.scss";
 
 const defaultData = {
@@ -15,30 +15,53 @@ const defaultData = {
   strategy: ""
 };
 
-const markArr = ["2019-12-1", "2019-12-2", "2019-12-3"];
+const currentDate = new Date();
 
 const Calendar: Taro.FunctionComponent = () => {
   const [data, setData] = useState(defaultData);
   const [visible, setVisible] = useState(false);
-  const [, fetchCalendar] = useAsyncFn<any>(getCalendarRoleApi);
-  const [, fetchSign] = useAsyncFn<any>(signApi);
+  const [date, setDate] = useState({
+    year: currentDate.getFullYear(),
+    month: currentDate.getMonth() + 1
+  });
+  const [{ loading: roleLoading }, fetchCalendar] = useAsyncFn<any>(
+    getCalendarRoleApi
+  );
+  const [{ loading: signLoading }, fetchSign] = useAsyncFn<any>(signApi);
+  const [
+    { loading: dateLoading, value = { signDays: [] } },
+    fetchDateApi
+  ] = useAsyncFn<any>(getDateApi);
   useEffect(() => {
     getConfig();
   }, []);
+  useEffect(() => {
+    if (roleLoading || signLoading || dateLoading) {
+      Taro.showLoading({ title: "加载中...", mask: true });
+    }
+  }, [roleLoading, signLoading, dateLoading]);
 
   const getConfig = async () => {
     await fetchCalendar({ cardno: Taro.getStorageSync("cardno") }).then(
       setData
     );
+    await fetchDateApi(date);
+    Taro.hideLoading();
   };
   const toRole = () => {
     setVisible(true);
   };
 
   const sign = async () => {
-    Taro.showLoading({ title: "加载中...", mask: true });
     await fetchSign({ cardno: Taro.getStorageSync("cardno") });
     await getConfig();
+    Taro.hideLoading();
+  };
+
+  const onMonthChange = async (value: any) => {
+    const [year, month] = value.split("-");
+    setDate({ year, month });
+    await fetchDateApi({ year, month });
     Taro.hideLoading();
   };
   return (
@@ -62,9 +85,10 @@ const Calendar: Taro.FunctionComponent = () => {
         <View className={Styles.span}>{data.signdata}</View>
       </View>
       <AtCalendar
-        marks={markArr.map((date: string) => {
-          return { value: date };
+        marks={(value.signDays || []).map((dateDay: string) => {
+          return [date.year, date.month, dateDay].join("-");
         })}
+        onMonthChange={onMonthChange}
       />
       <AtFloatLayout
         isOpened={visible}

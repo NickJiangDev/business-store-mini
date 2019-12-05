@@ -1,9 +1,12 @@
 @import "../../theme/Variables.scss";
 
 .page {
-  background-color: #fff;
   :global(.at-input--disabled) {
     opacity: 1;
+  }
+
+  .content {
+    background-color: #fff;
   }
 
   .rules {
@@ -19,5 +22,9 @@
       margin-top: 50px;
       word-wrap: break-word;
     }
+  }
+
+  .btn {
+    margin: 50px 30px 0;
   }
 }

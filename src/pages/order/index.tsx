@@ -1,14 +1,9 @@
-import Taro, {
-  useState,
-  usePullDownRefresh,
-  useReachBottom,
-  useEffect,
-  useReducer
-} from "@tarojs/taro";
-import { View } from "@tarojs/components";
+import Taro, { useReachBottom, useEffect, useReducer } from "@tarojs/taro";
+import { Barcode } from "taro-code";
+import { View, Text } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getOrderApi } from "@/services";
-import { AtTabs, AtTabsPane, AtButton, AtIcon } from "taro-ui";
+import { AtTabs, AtTabsPane, AtButton, AtFloatLayout } from "taro-ui";
 
 import Styles from "./index.module.scss";
 
@@ -35,7 +30,8 @@ const initialState = {
   data1: [],
   data2: [],
   data3: [],
-  count: 0
+  count: 0,
+  code: ""
 };
 function reducer(state: any, action: any) {
   switch (action.type) {
@@ -65,6 +61,11 @@ function reducer(state: any, action: any) {
         ...state,
         [`hasMore${state.count + 1}`]: false
       };
+    case "setCode":
+      return {
+        ...state,
+        code: action.code
+      };
     case "reset":
       return {
         ...state,
@@ -73,7 +74,8 @@ function reducer(state: any, action: any) {
         pageParams3: initialState.pageParams3,
         hasMore1: initialState.hasMore1,
         hasMore2: initialState.hasMore2,
-        hasMore3: initialState.hasMore3
+        hasMore3: initialState.hasMore3,
+        code: initialState.code
       };
     default:
       return state;
@@ -92,7 +94,8 @@ const Order: Taro.FunctionComponent = () => {
       count,
       hasMore1,
       hasMore2,
-      hasMore3
+      hasMore3,
+      code
     },
     dispatch
   ] = useReducer(reducer, initialState);
@@ -160,91 +163,120 @@ const Order: Taro.FunctionComponent = () => {
     console.log("ss");
   };
 
+  const openModal = (code: string) => {
+    dispatch({ type: "setCode", code });
+  };
+
+  const modalClose = () => {
+    setTimeout(() => {
+      dispatch({ type: "setCode", code: "" });
+    }, 40);
+  };
+
   return (
-    <AtTabs current={count} tabList={tabList} onClick={handleClick}>
-      <AtTabsPane current={count} index={0}>
-        {/* {
+    <View className={Styles.root}>
+      <AtTabs current={count} tabList={tabList} onClick={handleClick}>
+        <AtTabsPane current={count} index={0}>
+          {/* {
           <View className={Styles.empty}>
             <AtIcon value="shopping-bag" className={Styles.icon} />
             暂无数据
           </View>
         } */}
-        <View className={Styles.tabs}>
-          {Array(10)
-            .fill("")
-            .map(v => (
-              <View className={Styles.cell}>
-                <View className={Styles.leftCell}>
-                  <View className={Styles.cellInfo}>
-                    <View className={Styles.cellIcon}></View>
-                    <View>
-                      <View>优惠券名称</View>
-                      <View className={Styles.count}>￥10</View>
+          <View className={Styles.tabs}>
+            {Array(10)
+              .fill("")
+              .map(v => (
+                <View className={Styles.cell}>
+                  <View className={Styles.leftCell}>
+                    <View className={Styles.cellInfo}>
+                      <View className={Styles.cellIcon}></View>
+                      <View>
+                        <View>优惠券名称</View>
+                        <View className={Styles.count}>￥10</View>
+                      </View>
+                    </View>
+                    <View className={Styles.cellDate}>
+                      2018-12-12至2019-12-12
                     </View>
                   </View>
-                  <View className={Styles.cellDate}>
-                    2018-12-12至2019-12-12
+                  <View className={Styles.rightCell}>
+                    <AtButton
+                      className={Styles.btn}
+                      onClick={() =>
+                        openModal(v.couponcode || "131241sadfdslkwr432wt61423")
+                      }
+                    >
+                      立即使用
+                    </AtButton>
+                    <View onClick={useIntroduction}>使用说明 ></View>
                   </View>
                 </View>
-                <View className={Styles.rightCell}>
-                  <AtButton className={Styles.btn}>立即使用</AtButton>
-                  <View onClick={useIntroduction}>使用说明 ></View>
-                </View>
-              </View>
-            ))}
-        </View>
-      </AtTabsPane>
-      <AtTabsPane current={count} index={1}>
-        <View className={Styles.tabs}>
-          {Array(10)
-            .fill("")
-            .map(() => (
-              <View className={Styles.cell}>
-                <View className={Styles.leftCell}>
-                  <View className={Styles.cellInfo}>
-                    <View className={Styles.cellIcon}></View>
-                    <View>
-                      <View>优惠券名称</View>
-                      <View className={Styles.count}>￥10</View>
+              ))}
+          </View>
+        </AtTabsPane>
+        <AtTabsPane current={count} index={1}>
+          <View className={Styles.tabs}>
+            {Array(10)
+              .fill("")
+              .map(() => (
+                <View className={Styles.cell}>
+                  <View className={Styles.leftCell}>
+                    <View className={Styles.cellInfo}>
+                      <View className={Styles.cellIcon}></View>
+                      <View>
+                        <View>优惠券名称</View>
+                        <View className={Styles.count}>￥10</View>
+                      </View>
+                    </View>
+                    <View className={Styles.cellDate}>
+                      2018-12-12至2019-12-12
                     </View>
                   </View>
-                  <View className={Styles.cellDate}>
-                    2018-12-12至2019-12-12
+                  <View className={Styles.rightCell}>
+                    <AtButton className={Styles.btn} disabled={true}>
+                      已使用
+                    </AtButton>
+                    <View>使用说明 ></View>
                   </View>
                 </View>
-                <View className={Styles.rightCell}>
-                  <AtButton className={Styles.btn} disabled={true}>
-                    已使用
-                  </AtButton>
-                  <View>使用说明 ></View>
+              ))}
+          </View>
+        </AtTabsPane>
+        <AtTabsPane current={count} index={2}>
+          <View className={Styles.tabs}>
+            <View className={Styles.cell}>
+              <View className={Styles.leftCell}>
+                <View className={Styles.cellInfo}>
+                  <View className={Styles.cellIcon}></View>
+                  <View>
+                    <View>优惠券名称</View>
+                    <View className={Styles.count}>￥10</View>
+                  </View>
                 </View>
+                <View className={Styles.cellDate}>2018-12-12至2019-12-12</View>
               </View>
-            ))}
-        </View>
-      </AtTabsPane>
-      <AtTabsPane current={count} index={2}>
-        <View className={Styles.tabs}>
-          <View className={Styles.cell}>
-            <View className={Styles.leftCell}>
-              <View className={Styles.cellInfo}>
-                <View className={Styles.cellIcon}></View>
-                <View>
-                  <View>优惠券名称</View>
-                  <View className={Styles.count}>￥10</View>
-                </View>
+              <View className={Styles.rightCell}>
+                <AtButton className={Styles.btn} disabled={true}>
+                  已过期
+                </AtButton>
+                <View>使用说明 ></View>
               </View>
-              <View className={Styles.cellDate}>2018-12-12至2019-12-12</View>
-            </View>
-            <View className={Styles.rightCell}>
-              <AtButton className={Styles.btn} disabled={true}>
-                已过期
-              </AtButton>
-              <View>使用说明 ></View>
             </View>
           </View>
-        </View>
-      </AtTabsPane>
-    </AtTabs>
+        </AtTabsPane>
+        <AtFloatLayout isOpened={!!code} onClose={modalClose}>
+          {code ? (
+            <View className={Styles.codeCell}>
+              <Barcode text={code} width={235} height={68} />
+              <Text>{code}</Text>
+            </View>
+          ) : (
+            false
+          )}
+        </AtFloatLayout>
+      </AtTabs>
+    </View>
   );
 };
 

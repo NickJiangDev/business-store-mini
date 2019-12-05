@@ -222,6 +222,33 @@ function exchangePointApi(params: IExchangeParams) {
   return http.post({ model: "mem", action: "pointexchange" }, params);
 }
 
+interface IgetTicketParams {
+  billno: string;
+}
+
+/*
+ * 领劵
+ * @param {IgetTicketParams} params
+ * @returns
+ */
+function getTicketApi(params: IgetTicketParams) {
+  return http.post({ model: "mem", action: "drawcoupon" }, params);
+}
+
+interface IGetDateParams {
+  year: string;
+  month: string;
+}
+
+/*
+ * 获取签到时间
+ * @param {IgetTicketParams} params
+ * @returns
+ */
+function getDateApi(params: IGetDateParams) {
+  return http.post({ model: "mem", action: "getsigndays" }, params);
+}
+
 export {
   getHome,
   getLogin,
@@ -240,5 +267,7 @@ export {
   getPointApi,
   getCenterList,
   bindCardApi,
-  exchangePointApi
+  exchangePointApi,
+  getTicketApi,
+  getDateApi
 };

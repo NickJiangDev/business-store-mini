@@ -19,4 +19,14 @@ export const defaultInfoData = {
   money: "",
   headimgurl: ""
 };
+
+export const goUrl = {
+  key01: "/pages/order/index",
+  key02: "/pages/customer/index",
+  key03: "/pages/nearShop/index",
+  key04: "/pages/pay/index",
+  key05: "/pages/integral/index",
+  key06: "/pages/calendar/index",
+  key07: "/pages/cardCenter/index"
+};
 export const time = 60000;

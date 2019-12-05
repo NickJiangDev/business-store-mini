@@ -5,7 +5,7 @@ import cx from "classnames";
 import { AtList, AtListItem, AtGrid } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getCardInfo, getCustomNum, getCardData } from "@/services";
-import { defaultSkeleton, defaultInfoData, time } from "./interface";
+import { defaultSkeleton, defaultInfoData, time, goUrl } from "./interface";
 import Styles from "./index.module.scss";
 
 let timer;
@@ -46,40 +46,15 @@ const Card: Taro.FunctionComponent = () => {
     } catch (error) {}
   };
 
-  const toCustomer = () => {
-    Taro.navigateTo({
-      url: "/pages/customer/index"
-    });
-  };
+  const goto = (v: any) => {
+    const { operate_key, mini_app_url, operate_type } = v;
 
-  const toPay = () => {
-    Taro.navigateTo({
-      url: "/pages/pay/index"
-    });
-  };
-
-  const toOrder = () => {
-    Taro.navigateTo({
-      url: "/pages/order/index"
-    });
-  };
-
-  const toIntegral = () => {
-    Taro.navigateTo({
-      url: "/pages/integral/index"
-    });
-  };
-
-  const toCalendar = () => {
-    Taro.navigateTo({
-      url: "/pages/calendar/index"
-    });
-  };
-
-  const toNearShop = () => {
-    Taro.navigateTo({
-      url: "/pages/nearShop/index"
-    });
+    if (operate_type === "openPage") {
+      Taro.navigateTo({
+        url: goUrl[operate_key]
+      });
+      return;
+    }
   };
 
   const refresh = async (type = "timer") => {
@@ -154,27 +129,20 @@ const Card: Taro.FunctionComponent = () => {
       </View>
       {value ? (
         <View className={Styles.barcode} onClick={() => refresh("click")}>
-          <Barcode text={value.paycode} width={305} height={68} />
+          <Barcode text={value.paycode} width={285} height={68} />
           <Text className={Styles.no}>{value.paycode}</Text>
         </View>
       ) : (
         false
       )}
       <AtList>
-        <AtListItem
-          title="储值与消费"
-          extraText="储值卡消费"
-          onClick={toCustomer}
-        />
-        <AtListItem title="优惠券" extraText="优惠券" onClick={toOrder} />
-        <AtListItem title="充值" extraText="充值" onClick={toPay} />
-        <AtListItem
-          title="积分兑换"
-          extraText="积分兑换"
-          onClick={toIntegral}
-        />
-        <AtListItem title="每日签到" onClick={toCalendar} />
-        <AtListItem title="关注门店" onClick={toNearShop} />
+        {skeletonValue.column_info_list.map((v: any) => (
+          <AtListItem
+            title={v.title}
+            extraText={v.tips}
+            onClick={() => goto(v)}
+          />
+        ))}
       </AtList>
       {/* <AtGrid
         data={[

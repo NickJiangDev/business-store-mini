@@ -1,8 +1,7 @@
 import Taro, { useReachBottom, useEffect, useReducer } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { AtProgress, AtButton } from "taro-ui";
-import useAsyncFn from "@/shared/useAsyncFn";
-import { getCenterList } from "@/services/index";
+import { getCenterList, getTicketApi } from "@/services/index";
 import Styles from "./index.module.scss";
 
 // useReducer
@@ -55,6 +54,16 @@ const CardCenter: Taro.FunctionComponent = () => {
     });
     Taro.hideLoading();
   };
+
+  const goGet = async (billno: string) => {
+    Taro.showLoading({ title: "加载中...", mask: true });
+    await getTicketApi({ billno });
+    const newPageindex = pageindex + 1;
+    dispatch({ type: "pageUpdate", pageindex: newPageindex });
+    await fetchApi({ pagesize, pageindex: newPageindex });
+
+    Taro.showToast({ icon: "none", title: "领取成功" });
+  };
   useReachBottom(() => {
     if (noMoreData) {
       return;
@@ -65,29 +74,37 @@ const CardCenter: Taro.FunctionComponent = () => {
   });
   return (
     <View className={Styles.pages}>
-      {Array(13)
-        .fill("")
-        .map(() => {
-          return (
-            <View className={Styles.cell}>
-              <View className={Styles.leftCell}>
-                <View className={Styles.cellInfo}>
-                  <View className={Styles.cellIcon}></View>
-                  <View>
-                    <View>优惠券名称</View>
-                    <View className={Styles.count}>￥10</View>
-                  </View>
+      {list.map((v: any) => {
+        return (
+          <View className={Styles.cell}>
+            <View className={Styles.leftCell}>
+              <View className={Styles.cellInfo}>
+                <View className={Styles.cellIcon}></View>
+                <View>
+                  <View>{v.couponname}</View>
+                  <View className={Styles.count}>￥{v.couponmoney}</View>
                 </View>
-                <View className={Styles.cellDate}>2018-12-12至2019-12-12</View>
               </View>
-              <View className={Styles.rightCell}>
-                <View className={Styles.processNum}>1/1</View>
-                <AtProgress percent={75} strokeWidth={4} isHidePercent />
-                <AtButton className={Styles.btn}>立即抢</AtButton>
-              </View>
+              <View
+                className={Styles.cellDate}
+              >{`${v.starttime}至${v.endtime}`}</View>
             </View>
-          );
-        })}
+            <View className={Styles.rightCell}>
+              <View
+                className={Styles.processNum}
+              >{`${v.getamount}/${v.totalamount}`}</View>
+              <AtProgress percent={v.getrate} strokeWidth={4} isHidePercent />
+              <AtButton
+                className={Styles.btn}
+                onClick={() => goGet(v.billno)}
+                disabled={v.getamount === v.totalamount}
+              >
+                {v.getamount === v.totalamount ? "抢光了" : "立即抢"}
+              </AtButton>
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 };

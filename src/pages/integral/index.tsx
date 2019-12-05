@@ -1,6 +1,6 @@
 import Taro, { useState, useEffect } from "@tarojs/taro";
 import { AtInput, AtButton } from "taro-ui";
-import { View } from "@tarojs/components";
+import { View, Text } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getPointApi, exchangePointApi } from "@/services/index";
 import Styles from "./index.module.scss";
@@ -9,6 +9,17 @@ const defaultData = {
   datalist: [],
   money: 0,
   point: 0
+};
+
+const getCellText = (cellData: any) => {
+  const value =
+    cellData.exchangevalue === 1
+      ? `1积分兑换${cellData.exchangerate}元}`
+      : `${cellData.exchangemoney}元`;
+  const msg = cellData.exchangeflag === 1 ? "比例" : "金额";
+  return cellData.endmoney
+    ? `${cellData.startmoney}以上：兑换${msg}为${value}`
+    : `${cellData.startmoney}-${cellData.endmoney}：兑换${msg}为${value}`;
 };
 function Integral() {
   const [integral, setIntegral] = useState("");
@@ -37,28 +48,32 @@ function Integral() {
   };
   return (
     <View className={Styles.page}>
-      <AtInput
-        name="积分"
-        title="积分"
-        value={data.point}
-        editable={false}
-        onChange={() => {}}
-      ></AtInput>
-      <AtInput
-        name="兑换积分"
-        title="兑换积分"
-        type="number"
-        placeholder="请输入兑换积分"
-        value={integral}
-        onChange={integralOnchange}
-      ></AtInput>
-      <View className={Styles.rules}>
-        <View className={Styles.rulesTitle}>兑换规则</View>
-        <View className={Styles.rulesContent}>
-          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      <View className={Styles.content}>
+        <AtInput
+          name="积分"
+          title="积分"
+          value={data.point}
+          editable={false}
+          onChange={() => {}}
+        ></AtInput>
+        <AtInput
+          name="兑换积分"
+          title="兑换积分"
+          type="number"
+          placeholder="请输入兑换积分"
+          value={integral}
+          onChange={integralOnchange}
+        ></AtInput>
+        <View className={Styles.rules}>
+          <View className={Styles.rulesTitle}>兑换规则</View>
+          <View className={Styles.rulesContent}>
+            {data.datalist.map((v: any) => (
+              <Text>{getCellText(v)}</Text>
+            ))}
+          </View>
         </View>
       </View>
-      <AtButton type="primary" onClick={pointExchange}>
+      <AtButton className={Styles.btn} type="primary" onClick={pointExchange}>
         积分兑换
       </AtButton>
     </View>
