@@ -24,11 +24,18 @@ const getCellText = (cellData: any) => {
 function Integral() {
   const [integral, setIntegral] = useState("");
   const [data, setData] = useState(defaultData);
-  const [, fetchPoint] = useAsyncFn<any>(getPointApi);
+  const [{ loading }, fetchPoint] = useAsyncFn<any>(getPointApi);
 
   useEffect(() => {
     getConfig();
   }, []);
+  useEffect(() => {
+    if (loading) {
+      Taro.showLoading({ title: "加载中...", mask: true });
+      return;
+    }
+    Taro.hideLoading();
+  }, [loading]);
 
   const getConfig = async () => {
     fetchPoint().then((res: any) => {

@@ -3,7 +3,7 @@ import { Barcode } from "taro-code";
 import { View, Text } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getOrderApi } from "@/services";
-import { AtTabs, AtTabsPane, AtButton, AtFloatLayout } from "taro-ui";
+import { AtTabs, AtTabsPane, AtButton, AtFloatLayout, AtIcon } from "taro-ui";
 
 import Styles from "./index.module.scss";
 
@@ -31,7 +31,8 @@ const initialState = {
   data2: [],
   data3: [],
   count: 0,
-  code: ""
+  code: "",
+  role: ""
 };
 function reducer(state: any, action: any) {
   switch (action.type) {
@@ -66,6 +67,11 @@ function reducer(state: any, action: any) {
         ...state,
         code: action.code
       };
+    case "setRole":
+      return {
+        ...state,
+        role: action.role
+      };
     case "reset":
       return {
         ...state,
@@ -75,7 +81,8 @@ function reducer(state: any, action: any) {
         hasMore1: initialState.hasMore1,
         hasMore2: initialState.hasMore2,
         hasMore3: initialState.hasMore3,
-        code: initialState.code
+        code: initialState.code,
+        role: initialState.role
       };
     default:
       return state;
@@ -95,10 +102,12 @@ const Order: Taro.FunctionComponent = () => {
       hasMore1,
       hasMore2,
       hasMore3,
-      code
+      code,
+      role
     },
     dispatch
   ] = useReducer(reducer, initialState);
+
   const paramsObj = {
     0: {
       params: pageParams1,
@@ -117,7 +126,7 @@ const Order: Taro.FunctionComponent = () => {
     }
   };
 
-  const [, getOrder] = useAsyncFn<any>(getOrderApi);
+  const [{ loading }, getOrder] = useAsyncFn<any>(getOrderApi);
   // usePullDownRefresh(() => {
   //   debugger;
   // });
@@ -159,113 +168,127 @@ const Order: Taro.FunctionComponent = () => {
     dispatch({ type: "setCount", count: value });
   };
 
-  const useIntroduction = () => {
-    console.log("ss");
-  };
-
   const openModal = (code: string) => {
     dispatch({ type: "setCode", code });
   };
 
-  const modalClose = () => {
+  const modalClose = (type: string) => {
     setTimeout(() => {
-      dispatch({ type: "setCode", code: "" });
+      dispatch({ type, code: "" });
     }, 40);
+  };
+
+  const goRole = (roleValue: string) => {
+    dispatch({ type: "setRole", role: roleValue });
   };
 
   return (
     <View className={Styles.root}>
       <AtTabs current={count} tabList={tabList} onClick={handleClick}>
         <AtTabsPane current={count} index={0}>
-          {/* {
-          <View className={Styles.empty}>
-            <AtIcon value="shopping-bag" className={Styles.icon} />
-            暂无数据
-          </View>
-        } */}
-          <View className={Styles.tabs}>
-            {Array(10)
-              .fill("")
-              .map(v => (
+          {data1.length || loading ? (
+            <View className={Styles.tabs}>
+              {data1.map((v: any) => (
                 <View className={Styles.cell}>
                   <View className={Styles.leftCell}>
                     <View className={Styles.cellInfo}>
                       <View className={Styles.cellIcon}></View>
                       <View>
-                        <View>优惠券名称</View>
-                        <View className={Styles.count}>￥10</View>
+                        <View>{v.couponname}</View>
+                        <View className={Styles.count}>￥{v.couponmoney}</View>
                       </View>
                     </View>
                     <View className={Styles.cellDate}>
-                      2018-12-12至2019-12-12
+                      {`${v.starttime}至${v.endtime}`}
                     </View>
                   </View>
                   <View className={Styles.rightCell}>
                     <AtButton
                       className={Styles.btn}
-                      onClick={() =>
-                        openModal(v.couponcode || "131241sadfdslkwr432wt61423")
-                      }
+                      onClick={() => openModal(v.couponcode)}
                     >
                       立即使用
                     </AtButton>
-                    <View onClick={useIntroduction}>使用说明 ></View>
+                    <View onClick={() => goRole(v.coupondesc)}>使用说明 ></View>
                   </View>
                 </View>
               ))}
-          </View>
+            </View>
+          ) : (
+            <View className={Styles.empty}>
+              <AtIcon value="shopping-bag" className={Styles.icon} />
+              暂无数据
+            </View>
+          )}
         </AtTabsPane>
         <AtTabsPane current={count} index={1}>
-          <View className={Styles.tabs}>
-            {Array(10)
-              .fill("")
-              .map(() => (
+          {data2.length || loading ? (
+            <View className={Styles.tabs}>
+              {data2.map((v: any) => (
                 <View className={Styles.cell}>
                   <View className={Styles.leftCell}>
                     <View className={Styles.cellInfo}>
                       <View className={Styles.cellIcon}></View>
                       <View>
-                        <View>优惠券名称</View>
-                        <View className={Styles.count}>￥10</View>
+                        <View>{v.couponname}</View>
+                        <View className={Styles.count}>￥{v.couponmoney}</View>
                       </View>
                     </View>
                     <View className={Styles.cellDate}>
-                      2018-12-12至2019-12-12
+                      {`${v.starttime}至${v.endtime}`}
                     </View>
                   </View>
                   <View className={Styles.rightCell}>
                     <AtButton className={Styles.btn} disabled={true}>
                       已使用
                     </AtButton>
-                    <View>使用说明 ></View>
+                    <View onClick={() => goRole(v.coupondesc)}>使用说明 ></View>
                   </View>
                 </View>
               ))}
-          </View>
+            </View>
+          ) : (
+            <View className={Styles.empty}>
+              <AtIcon value="shopping-bag" className={Styles.icon} />
+              暂无数据
+            </View>
+          )}
         </AtTabsPane>
         <AtTabsPane current={count} index={2}>
-          <View className={Styles.tabs}>
-            <View className={Styles.cell}>
-              <View className={Styles.leftCell}>
-                <View className={Styles.cellInfo}>
-                  <View className={Styles.cellIcon}></View>
-                  <View>
-                    <View>优惠券名称</View>
-                    <View className={Styles.count}>￥10</View>
+          {data3.length || loading ? (
+            <View className={Styles.tabs}>
+              {data3.map((v: any) => (
+                <View className={Styles.cell}>
+                  <View className={Styles.leftCell}>
+                    <View className={Styles.cellInfo}>
+                      <View className={Styles.cellIcon}></View>
+                      <View>
+                        <View>{v.couponname}</View>
+                        <View className={Styles.count}>￥{v.couponmoney}</View>
+                      </View>
+                    </View>
+                    <View className={Styles.cellDate}>
+                      {" "}
+                      {`${v.starttime}至${v.endtime}`}
+                    </View>
+                  </View>
+                  <View className={Styles.rightCell}>
+                    <AtButton className={Styles.btn} disabled={true}>
+                      已过期
+                    </AtButton>
+                    <View onClick={() => goRole(v.coupondesc)}>使用说明 ></View>
                   </View>
                 </View>
-                <View className={Styles.cellDate}>2018-12-12至2019-12-12</View>
-              </View>
-              <View className={Styles.rightCell}>
-                <AtButton className={Styles.btn} disabled={true}>
-                  已过期
-                </AtButton>
-                <View>使用说明 ></View>
-              </View>
+              ))}
             </View>
-          </View>
+          ) : (
+            <View className={Styles.empty}>
+              <AtIcon value="shopping-bag" className={Styles.icon} />
+              暂无数据
+            </View>
+          )}
         </AtTabsPane>
-        <AtFloatLayout isOpened={!!code} onClose={modalClose}>
+        <AtFloatLayout isOpened={!!code} onClose={() => modalClose("setCode")}>
           {code ? (
             <View className={Styles.codeCell}>
               <Barcode text={code} width={235} height={68} />
@@ -274,6 +297,13 @@ const Order: Taro.FunctionComponent = () => {
           ) : (
             false
           )}
+        </AtFloatLayout>
+        <AtFloatLayout
+          isOpened={!!role}
+          onClose={() => modalClose("setRole")}
+          title="使用说明"
+        >
+          {role}
         </AtFloatLayout>
       </AtTabs>
     </View>

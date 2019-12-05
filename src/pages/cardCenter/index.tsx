@@ -29,6 +29,13 @@ function reducer(state: any, action: any) {
         ...state,
         noMoreData: true
       };
+    case "resetData":
+      return {
+        ...state,
+        list: action.list,
+        pageindex: initialState.pageindex,
+        noMoreData: initialState.noMoreData
+      };
     default:
       return state;
   }
@@ -56,13 +63,13 @@ const CardCenter: Taro.FunctionComponent = () => {
   };
 
   const goGet = async (billno: string) => {
-    Taro.showLoading({ title: "加载中...", mask: true });
-    await getTicketApi({ billno });
-    const newPageindex = pageindex + 1;
-    dispatch({ type: "pageUpdate", pageindex: newPageindex });
-    await fetchApi({ pagesize, pageindex: newPageindex });
-
-    Taro.showToast({ icon: "none", title: "领取成功" });
+    try {
+      Taro.showLoading({ title: "加载中...", mask: true });
+      await getTicketApi({ billno });
+      const result = await getCenterList({ pagesize, pageindex: 1 });
+      dispatch({ type: "resetData", list: result.couponlist });
+      Taro.showToast({ icon: "none", title: "领取成功" });
+    } catch (error) {}
   };
   useReachBottom(() => {
     if (noMoreData) {
