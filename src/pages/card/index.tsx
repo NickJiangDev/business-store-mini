@@ -65,14 +65,11 @@ const Card: Taro.FunctionComponent = () => {
   };
 
   const gridGoto = (key: string) => {
-    Taro.navigateTo({
-      url: "/pages/bindPhone/index"
-    });
-    // if (key) {
-    //   Taro.navigateTo({
-    //     url: goUrl[key]
-    //   });
-    // }
+    if (key) {
+      Taro.navigateTo({
+        url: goUrl[key]
+      });
+    }
   };
 
   const refresh = async (type = "timer") => {
@@ -184,18 +181,17 @@ const Card: Taro.FunctionComponent = () => {
           </View>
         </View>
       </View>
-      {value && !loading ? (
+      {value ? (
         <View className={Styles.barcode} onClick={() => refresh("click")}>
           <Barcode text={value.paycode} width={285} height={68} />
           <Text className={Styles.no}>{value.paycode}</Text>
         </View>
       ) : (
         <View
+          className={Styles.emptyCode}
           style={{
             width: "285px",
-            height: "74px",
-            backgroundColor: "#ccc",
-            margin: "10px auto"
+            height: "90px"
           }}
         />
       )}

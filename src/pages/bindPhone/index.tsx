@@ -56,7 +56,7 @@ const BindPhone: Taro.FunctionComponent = () => {
         className={Styles.btn}
         onClick={fetchBind}
         loading={loading}
-        disabled={!(phone && card)}
+        disabled={!phone}
       >
         确认
       </AtButton>
