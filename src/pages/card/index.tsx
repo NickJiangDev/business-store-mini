@@ -1,4 +1,4 @@
-import Taro, { useEffect } from "@tarojs/taro";
+import Taro, { useEffect, usePullDownRefresh } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import { Barcode } from "taro-code";
 import cx from "classnames";
@@ -20,11 +20,17 @@ const Card: Taro.FunctionComponent = () => {
   const cellLength = [
     skeletonValue.supply_bonus,
     skeletonValue.supply_balance,
-    skeletonValue.supply_coupon
+    skeletonValue.supply_coupon,
+    skeletonValue.supply_level
   ].filter(v => v).length; // 当前积分栏的显示数量
   useEffect(() => {
     setup();
   }, []);
+
+  usePullDownRefresh(async () => {
+    await setup();
+    Taro.stopPullDownRefresh();
+  });
 
   useEffect(() => {
     return clearInterval(timer);
@@ -32,6 +38,7 @@ const Card: Taro.FunctionComponent = () => {
 
   const setup = async () => {
     try {
+      clearInterval(timer);
       const cardid = Taro.getStorageSync("cardid");
       const cardno = Taro.getStorageSync("cardno");
       if (cardid && cardno) {
@@ -57,6 +64,17 @@ const Card: Taro.FunctionComponent = () => {
     }
   };
 
+  const gridGoto = (key: string) => {
+    Taro.navigateTo({
+      url: "/pages/bindPhone/index"
+    });
+    // if (key) {
+    //   Taro.navigateTo({
+    //     url: goUrl[key]
+    //   });
+    // }
+  };
+
   const refresh = async (type = "timer") => {
     Taro.showLoading({ title: "加载中...", mask: true });
     // 点击后刷新接口，重启定时器
@@ -77,11 +95,19 @@ const Card: Taro.FunctionComponent = () => {
     [Styles.view]: true,
     [Styles.view1]: cellLength === 1,
     [Styles.view2]: cellLength === 2,
-    [Styles.view3]: cellLength === 3
+    [Styles.view3]: cellLength === 3,
+    [Styles.view4]: cellLength === 4
   };
+
+  const imgStyle = skeletonValue.background_url
+    ? { backgroundImage: `url(${skeletonValue.background_url})` }
+    : {};
+  const colorStyle = skeletonValue.color
+    ? { backgroundColor: skeletonValue.color }
+    : {};
   return (
     <View className={Styles.pages}>
-      <View className={Styles.sign}>
+      <View className={Styles.sign} style={{ ...imgStyle, ...colorStyle }}>
         <View className={Styles.userCell}>
           <Image
             src={infoData.headimgurl}
@@ -101,7 +127,12 @@ const Card: Taro.FunctionComponent = () => {
             })}
           >
             <View>积分</View>
-            <View className={Styles.primary}>{infoData.point}</View>
+            <View
+              className={Styles.primary}
+              onClick={() => gridGoto(infoData.bonus_key)}
+            >
+              {infoData.point}
+            </View>
           </View>
         </View>
         <View>
@@ -112,7 +143,12 @@ const Card: Taro.FunctionComponent = () => {
             })}
           >
             <View>金额</View>
-            <View className={Styles.primary}>{infoData.money}</View>
+            <View
+              className={Styles.primary}
+              onClick={() => gridGoto(infoData.balance_key)}
+            >
+              {infoData.money}
+            </View>
           </View>
         </View>
         <View>
@@ -123,7 +159,28 @@ const Card: Taro.FunctionComponent = () => {
             })}
           >
             <View>优惠券</View>
-            <View className={Styles.primary}>查看</View>
+            <View
+              className={Styles.primary}
+              onClick={() => gridGoto(infoData.bonus_key)}
+            >
+              查看
+            </View>
+          </View>
+        </View>
+        <View>
+          <View
+            className={cx({
+              ...viewStyles,
+              [Styles.view0]: !skeletonValue.supply_level
+            })}
+          >
+            <View>等级</View>
+            <View
+              className={Styles.primary}
+              onClick={() => gridGoto(infoData.bonus_key)}
+            >
+              {infoData.levelname}
+            </View>
           </View>
         </View>
       </View>
@@ -165,7 +222,9 @@ const Card: Taro.FunctionComponent = () => {
 };
 
 Card.config = {
-  navigationBarTitleText: "会员卡"
+  navigationBarTitleText: "会员卡",
+  enablePullDownRefresh: true,
+  backgroundTextStyle: "dark"
 };
 
 export default Card;

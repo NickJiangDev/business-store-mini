@@ -17,7 +17,11 @@ export const defaultInfoData = {
   cardno: "",
   point: "",
   money: "",
-  headimgurl: ""
+  headimgurl: "",
+  bonus_key: "",
+  balance_key: "",
+  coupon_key: "",
+  levelname: ""
 };
 
 export const goUrl = {

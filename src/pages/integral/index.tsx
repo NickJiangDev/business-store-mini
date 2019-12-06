@@ -40,10 +40,10 @@ function Integral() {
   const getConfig = async () => {
     fetchPoint().then((res: any) => {
       setData(res);
+      setIntegral("");
     });
   };
-  const integralOnchange = (e: any) => {
-    const value = (e.target && e.target.value) || "";
+  const integralOnchange = (value: string) => {
     setIntegral(value);
   };
   const pointExchange = async () => {
@@ -51,6 +51,7 @@ function Integral() {
       Taro.showLoading({ title: "加载中...", mask: true });
       await exchangePointApi({ point: integral });
       Taro.showToast({ icon: "none", title: "兑换成功" });
+      getConfig();
     } catch (error) {}
   };
   return (

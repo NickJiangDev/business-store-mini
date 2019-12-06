@@ -55,7 +55,7 @@ const Calendar: Taro.FunctionComponent = () => {
   const sign = async () => {
     await fetchSign({ cardno: Taro.getStorageSync("cardno") });
     await getConfig();
-    Taro.hideLoading();
+    Taro.showToast({ icon: "none", title: "查询成功" });
   };
 
   const onMonthChange = async (value: any) => {
@@ -95,9 +95,7 @@ const Calendar: Taro.FunctionComponent = () => {
         title="签到规则"
         onClose={() => setVisible(false)}
       >
-        这是内容区 随你怎么写这是内容区 随你怎么写这是内容区
-        随你怎么写这是内容区 随你怎么写这是内容区 随你怎么写这是内容区
-        随你怎么写
+        {data.strategy}
       </AtFloatLayout>
     </View>
   );

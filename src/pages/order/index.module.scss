@@ -10,7 +10,7 @@
   }
 
   .codeCell {
-    padding: 50px 0;
+    padding: 50px 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +52,6 @@
     .cellInfo {
       width: 100%;
       height: 7.2vh;
-      text-align: center;
       display: flex;
       align-items: center;
 

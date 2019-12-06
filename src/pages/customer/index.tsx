@@ -19,7 +19,7 @@ function Customer() {
   //   };
   // }, []);
 
-  const [{ value = { paycode: "" } }, getCustom] = useAsyncFn<any>(
+  const [{ value = { paycode: "", money: "0" } }, getCustom] = useAsyncFn<any>(
     getCustomNum
   );
   useEffect(() => {
@@ -63,7 +63,7 @@ function Customer() {
     <View>
       <View className={Styles.balance}>
         <View className={Styles.p}>余额</View>
-        <View className={Styles.p}>￥20元</View>
+        <View className={Styles.p}>￥{value.money}元</View>
       </View>
       {value.paycode ? (
         <View className={Styles.barcode} onClick={() => refresh("click")}>

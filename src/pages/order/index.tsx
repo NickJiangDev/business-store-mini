@@ -288,24 +288,24 @@ const Order: Taro.FunctionComponent = () => {
             </View>
           )}
         </AtTabsPane>
-        <AtFloatLayout isOpened={!!code} onClose={() => modalClose("setCode")}>
-          {code ? (
-            <View className={Styles.codeCell}>
-              <Barcode text={code} width={235} height={68} />
-              <Text>{code}</Text>
-            </View>
-          ) : (
-            false
-          )}
-        </AtFloatLayout>
-        <AtFloatLayout
-          isOpened={!!role}
-          onClose={() => modalClose("setRole")}
-          title="使用说明"
-        >
-          {role}
-        </AtFloatLayout>
       </AtTabs>
+      <AtFloatLayout isOpened={!!code} onClose={() => modalClose("setCode")}>
+        {code ? (
+          <View className={Styles.codeCell}>
+            <Barcode text={code} width={235} height={68} />
+            <Text>{code}</Text>
+          </View>
+        ) : (
+          false
+        )}
+      </AtFloatLayout>
+      <AtFloatLayout
+        isOpened={!!role}
+        onClose={() => modalClose("setRole")}
+        title="使用说明"
+      >
+        {role}
+      </AtFloatLayout>
     </View>
   );
 };
