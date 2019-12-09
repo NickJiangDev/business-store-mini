@@ -21,12 +21,17 @@
   background-color: #fff;
   border-bottom: 2px solid #ccc;
 
+  .titleCell {
+    width: 70vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .title {
     font-size: 32px;
   }
 
   .distance {
-    margin-left: 20px;
     font-size: 26px;
     color: #999;
   }

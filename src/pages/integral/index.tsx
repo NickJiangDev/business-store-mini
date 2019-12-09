@@ -1,6 +1,7 @@
 import Taro, { useState, useEffect } from "@tarojs/taro";
 import { AtInput, AtButton } from "taro-ui";
 import { View, Text } from "@tarojs/components";
+import cx from "classnames";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getPointApi, exchangePointApi } from "@/services/index";
 import Styles from "./index.module.scss";
@@ -57,21 +58,33 @@ function Integral() {
   return (
     <View className={Styles.page}>
       <View className={Styles.content}>
-        <AtInput
-          name="积分"
-          title="积分"
-          value={data.point}
-          editable={false}
-          onChange={() => {}}
-        ></AtInput>
-        <AtInput
-          name="兑换积分"
-          title="兑换积分"
-          type="number"
-          placeholder="请输入兑换积分"
-          value={integral}
-          onChange={integralOnchange}
-        ></AtInput>
+        <View className={Styles.inputCell}>
+          <Text className={Styles.inputTitle}>积分</Text>
+          <AtInput
+            className={cx({
+              [Styles.input]: true,
+              [Styles.gray]: true
+            })}
+            name=""
+            title=""
+            value={data.point}
+            editable={false}
+            onChange={() => {}}
+          />
+        </View>
+
+        <View className={Styles.inputCell}>
+          <Text className={Styles.inputTitle}>兑换积分</Text>
+          <AtInput
+            className={Styles.input}
+            name=""
+            title=""
+            type="number"
+            placeholder="请输入兑换积分"
+            value={integral}
+            onChange={integralOnchange}
+          />
+        </View>
         <View className={Styles.rules}>
           <View className={Styles.rulesTitle}>兑换规则</View>
           <View className={Styles.rulesContent}>

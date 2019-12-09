@@ -62,8 +62,11 @@
       .cellIcon {
         width: 6vh;
         height: 6vh;
-        background-color: $color-brand;
+        background: url("../../assets/images/ticket.png");
         margin: 0 12px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
       }
     }
     .cellDate {

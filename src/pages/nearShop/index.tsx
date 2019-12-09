@@ -183,8 +183,10 @@ const NearShop: Taro.FunctionComponent = () => {
         {list.map((item: any, index: string) => (
           <View className="cell" key={index}>
             <View>
-              <Text className="title">{item.shopname}</Text>
-              <Text className="distance">{item.distance}</Text>
+              <View className="titleCell">
+                <Text className="title">{item.shopname}</Text>
+                <Text className="distance">{item.distance}</Text>
+              </View>
               <Text className="address">{item.shopaddr}</Text>
             </View>
             <AtButton

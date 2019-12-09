@@ -84,31 +84,38 @@ const CardCenter: Taro.FunctionComponent = () => {
       {list.map((v: any) => {
         return (
           <View className={Styles.cell}>
-            <View className={Styles.leftCell}>
-              <View className={Styles.cellInfo}>
-                <View className={Styles.cellIcon}></View>
-                <View>
-                  <View>{v.couponname}</View>
-                  <View className={Styles.count}>￥{v.couponmoney}</View>
+            <View className={Styles.cellFlex}>
+              <View className={Styles.leftCell}>
+                <View className={Styles.cellInfo}>
+                  <View className={Styles.cellIcon}></View>
+                  <View>
+                    <View>{v.couponname}</View>
+                    <View className={Styles.count}>{v.couponmoney}</View>
+                  </View>
                 </View>
               </View>
-              <View
-                className={Styles.cellDate}
-              >{`${v.starttime}至${v.endtime}`}</View>
+              <View className={Styles.rightCell}>
+                <View
+                  className={Styles.processNum}
+                >{`${v.getamount}/${v.totalamount}`}</View>
+                <AtProgress
+                  percent={v.getrate}
+                  strokeWidth={4}
+                  isHidePercent
+                  color="#ff6000"
+                />
+                <AtButton
+                  className={Styles.btn}
+                  onClick={() => goGet(v.billno)}
+                  disabled={v.getamount === v.totalamount}
+                >
+                  {v.getamount === v.totalamount ? "抢光了" : "立即抢"}
+                </AtButton>
+              </View>
             </View>
-            <View className={Styles.rightCell}>
-              <View
-                className={Styles.processNum}
-              >{`${v.getamount}/${v.totalamount}`}</View>
-              <AtProgress percent={v.getrate} strokeWidth={4} isHidePercent />
-              <AtButton
-                className={Styles.btn}
-                onClick={() => goGet(v.billno)}
-                disabled={v.getamount === v.totalamount}
-              >
-                {v.getamount === v.totalamount ? "抢光了" : "立即抢"}
-              </AtButton>
-            </View>
+            <View
+              className={Styles.cellDate}
+            >{`有效期：${v.starttime}至${v.endtime}`}</View>
           </View>
         );
       })}

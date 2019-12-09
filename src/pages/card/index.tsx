@@ -1,10 +1,14 @@
-import Taro, { useEffect, usePullDownRefresh } from "@tarojs/taro";
+import Taro, {
+  useEffect,
+  usePullDownRefresh,
+  useShareAppMessage
+} from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import { Barcode } from "taro-code";
 import cx from "classnames";
 import { AtList, AtListItem, AtGrid } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { getCardInfo, getCustomNum, getCardData } from "@/services";
+import { getCardInfo, getCustomNum, getCardData, getHome } from "@/services";
 import { defaultSkeleton, defaultInfoData, time, goUrl } from "./interface";
 import Styles from "./index.module.scss";
 
@@ -16,7 +20,8 @@ const Card: Taro.FunctionComponent = () => {
   const [{ value: infoData = defaultInfoData }, getCardDataApi] = useAsyncFn<
     any
   >(getCardData);
-  const [{ value, loading }, getCustom] = useAsyncFn<any>(getCustomNum);
+  const [{ value }, getCustom] = useAsyncFn<any>(getCustomNum);
+  const [, getConfig] = useAsyncFn<any>(getHome);
   const cellLength = [
     skeletonValue.supply_bonus,
     skeletonValue.supply_balance,
@@ -26,6 +31,17 @@ const Card: Taro.FunctionComponent = () => {
   useEffect(() => {
     setup();
   }, []);
+
+  useShareAppMessage(async () => {
+    Taro.showLoading({ title: "加载中...", mask: true });
+    const data = await getConfig();
+    Taro.hideLoading();
+    return {
+      title: data.brandname,
+      path: "/pages/index/index",
+      imageUrl: data.indexpic
+    };
+  });
 
   usePullDownRefresh(async () => {
     await setup();

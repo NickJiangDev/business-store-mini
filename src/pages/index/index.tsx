@@ -1,7 +1,6 @@
 import Taro, { useEffect, useState } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import LoginButton from "../../components/LoginButton";
-import namedPng from "@/assets/images/images.png";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { findCard, getHome } from "@/services/index";
 import Styles from "./index.module.scss";
