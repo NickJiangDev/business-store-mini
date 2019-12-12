@@ -29,7 +29,7 @@ const Calendar: Taro.FunctionComponent = () => {
   );
   const [{ loading: signLoading }, fetchSign] = useAsyncFn<any>(signApi);
   const [
-    { loading: dateLoading, value = { signDays: [] } },
+    { loading: dateLoading, value = { signdays: [] } },
     fetchDateApi
   ] = useAsyncFn<any>(getDateApi);
   useEffect(() => {
@@ -85,8 +85,8 @@ const Calendar: Taro.FunctionComponent = () => {
         <View className={Styles.span}>{data.signdata}</View>
       </View>
       <AtCalendar
-        marks={(value.signDays || []).map((dateDay: string) => {
-          return [date.year, date.month, dateDay].join("-");
+        marks={(value.signdays || []).map((dateDay: string) => {
+          return { value: [date.year, date.month, dateDay].join("-") };
         })}
         onMonthChange={onMonthChange}
       />

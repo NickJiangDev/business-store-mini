@@ -37,12 +37,16 @@ const initialState = {
 function reducer(state: any, action: any) {
   switch (action.type) {
     case "updateData":
-      console.log("data=", state[`data${state.count + 1}`]);
       return {
         ...state,
         [`data${state.count + 1}`]: state[`data${state.count + 1}`].concat(
           action.data
         )
+      };
+    case "reloadData":
+      return {
+        ...state,
+        [`data${state.count + 1}`]: action.data
       };
     case "setCount":
       return {
@@ -153,7 +157,7 @@ const Order: Taro.FunctionComponent = () => {
     dispatch({ type: "reset" });
     Taro.showLoading({ title: "加载中...", mask: true });
     getOrder({ ...paramsObj[count].params, pageindex: 1 }).then((res: any) => {
-      dispatch({ type: "updateData", data: res.couponlist });
+      dispatch({ type: "reloadData", data: res.couponlist });
       Taro.hideLoading();
     });
   }, [count]);
