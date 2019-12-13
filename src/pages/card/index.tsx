@@ -1,7 +1,8 @@
 import Taro, {
-  useEffect,
   usePullDownRefresh,
-  useShareAppMessage
+  useShareAppMessage,
+  useDidHide,
+  useDidShow
 } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import { Barcode } from "taro-code";
@@ -28,9 +29,6 @@ const Card: Taro.FunctionComponent = () => {
     skeletonValue.supply_coupon,
     skeletonValue.supply_level
   ].filter(v => v).length; // 当前积分栏的显示数量
-  useEffect(() => {
-    setup();
-  }, []);
 
   useShareAppMessage(async () => {
     Taro.showLoading({ title: "加载中...", mask: true });
@@ -48,13 +46,18 @@ const Card: Taro.FunctionComponent = () => {
     Taro.stopPullDownRefresh();
   });
 
-  useEffect(() => {
+  useDidShow(async () => {
+    await setup();
+  });
+  useDidHide(() => {
     return clearInterval(timer);
   });
 
   const setup = async () => {
     try {
-      clearInterval(timer);
+      if (timer) {
+        clearInterval(timer);
+      }
       const cardid = Taro.getStorageSync("cardid");
       const cardno = Taro.getStorageSync("cardno");
       if (cardid && cardno) {
@@ -81,6 +84,7 @@ const Card: Taro.FunctionComponent = () => {
   };
 
   const gridGoto = (key: string) => {
+    console.log(key);
     if (key) {
       Taro.navigateTo({
         url: goUrl[key]
@@ -142,7 +146,7 @@ const Card: Taro.FunctionComponent = () => {
             <View>积分</View>
             <View
               className={Styles.primary}
-              onClick={() => gridGoto(infoData.bonus_key)}
+              onClick={() => gridGoto(skeletonValue.bonus_key)}
             >
               {infoData.point}
             </View>
@@ -158,7 +162,7 @@ const Card: Taro.FunctionComponent = () => {
             <View>金额</View>
             <View
               className={Styles.primary}
-              onClick={() => gridGoto(infoData.balance_key)}
+              onClick={() => gridGoto(skeletonValue.balance_key)}
             >
               {infoData.money}
             </View>
@@ -174,7 +178,7 @@ const Card: Taro.FunctionComponent = () => {
             <View>优惠券</View>
             <View
               className={Styles.primary}
-              onClick={() => gridGoto(infoData.bonus_key)}
+              onClick={() => gridGoto(skeletonValue.coupon_key)}
             >
               查看
             </View>
@@ -190,7 +194,7 @@ const Card: Taro.FunctionComponent = () => {
             <View>等级</View>
             <View
               className={Styles.primary}
-              onClick={() => gridGoto(infoData.bonus_key)}
+              onClick={() => gridGoto(skeletonValue.level_key)}
             >
               {infoData.levelname}
             </View>

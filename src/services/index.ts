@@ -249,6 +249,31 @@ function getDateApi(params: IGetDateParams) {
   return http.post({ model: "mem", action: "getsigndays" }, params);
 }
 
+interface IPayConfigParams {
+  cardno: string;
+}
+/*
+ * 充值config
+ * @param {IPayConfigParams} params
+ * @returns
+ */
+function payConfigApi(params: IPayConfigParams) {
+  return http.post({ model: "mem", action: "rechargeinfo" }, params);
+}
+
+interface IPayParams {
+  cardno: string;
+  rechargemoney: string;
+}
+/*
+ * 充值
+ * @param {IPayParams} params
+ * @returns
+ */
+function payApi(params: IPayParams) {
+  return http.post({ model: "mem", action: "recharge" }, params);
+}
+
 export {
   getHome,
   getLogin,
@@ -269,5 +294,7 @@ export {
   bindCardApi,
   exchangePointApi,
   getTicketApi,
-  getDateApi
+  getDateApi,
+  payConfigApi,
+  payApi
 };
