@@ -24,10 +24,10 @@ const LoginButton = () => {
     if (encryptedData && iv && cloudID) {
       // 成功
       Taro.login({
-        async success(res) {
+        async success(response: any) {
           try {
-            if (res.code) {
-              const { openid } = await fetchLogin({ jscode: res.code });
+            if (response.code) {
+              const { openid } = await fetchLogin({ jscode: response.code });
               const { accesstoken } = await fetchUnionId({
                 openid,
                 encrypteddata: encryptedData,
@@ -38,7 +38,7 @@ const LoginButton = () => {
               setIsLogin(true);
               Taro.showToast({ icon: "none", title: "登录成功，请继续登录" });
             } else {
-              console.log("登录失败！" + res.errMsg);
+              console.log("登录失败！" + response.errMsg);
             }
           } catch (error) {}
         }

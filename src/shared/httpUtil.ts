@@ -68,7 +68,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
         return Promise.reject();
       } else {
         Taro.showToast({ icon: "none", title: res.errMsg });
-        throw new FetchError(res.statusCode, res.errMsg);
+        return Promise.reject();
       }
     }
     logger.info(`[ ${opt.method} ] ${fullUrl} fetched`, result);

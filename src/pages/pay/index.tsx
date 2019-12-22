@@ -21,7 +21,7 @@ function Pay() {
   useEffect(() => {
     const cardno = Taro.getStorageSync("cardno");
     getConfig({ cardno });
-  }, []);
+  }, [getConfig]);
 
   useEffect(() => {
     if (loading || payLoading) {

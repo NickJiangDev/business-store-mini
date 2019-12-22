@@ -3,6 +3,7 @@ import Taro from "@tarojs/taro";
 // cardflag, cardid, cardno
 interface FindHandlerProps {
   cardflag: number;
+  message: string;
   cardid: string;
   cardno: string;
 }
@@ -20,7 +21,7 @@ const redirectTo = (path: string) => {
 // 2000—跳转到关注门店界面
 
 export const findHandler = (props: FindHandlerProps) => {
-  const { cardflag, cardid, cardno } = props;
+  const { cardflag, cardid, cardno, message } = props;
   switch (cardflag) {
     case 1001:
       redirectTo("/pages/bindPhone/index");
@@ -34,7 +35,7 @@ export const findHandler = (props: FindHandlerProps) => {
       redirectTo("/pages/nearShop/index");
       break;
     default:
-      Taro.showToast({ icon: "none", title: "系统错误" });
+      Taro.showToast({ icon: "none", title: message });
       break;
   }
 };
