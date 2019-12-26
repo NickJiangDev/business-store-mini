@@ -55,7 +55,12 @@ function Pay() {
   };
   return (
     <View>
-      <View className={Styles.balance}>
+      <View
+        className={Styles.balance}
+        style={{
+          backgroundColor: Taro.getStorageSync("color")
+        }}
+      >
         <View className={Styles.rule} onClick={() => setVisible(true)}>
           充值规则 >
         </View>
@@ -64,10 +69,15 @@ function Pay() {
       </View>
       <View className={Styles.payCell}>
         <View className={Styles.flexCell}>
-          {value.rechargelist.map((v: string) => (
+          {value.rechargelist.map((v: string, i: number) => (
             <AtButton
+              key={i}
               type="secondary"
               className={Styles.cell}
+              customStyle={{
+                color: Taro.getStorageSync("color"),
+                borderColor: Taro.getStorageSync("color")
+              }}
               onClick={() => payHandler(v)}
             >
               {v}元
@@ -77,6 +87,9 @@ function Pay() {
             <AtInput
               className={Styles.input}
               name=""
+              customStyle={{
+                borderColor: Taro.getStorageSync("color")
+              }}
               value={inputValue}
               placeholder={value.customemoney + "整数"}
               onChange={(v: string) => inputOnChange(v)}

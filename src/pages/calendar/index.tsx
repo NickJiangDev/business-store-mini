@@ -2,6 +2,7 @@ import Taro, { useState, useEffect } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { AtCalendar, AtFloatLayout } from "taro-ui";
 import useAsyncFn from "@/shared/useAsyncFn";
+import cx from "classnames";
 import { getCalendarRoleApi, signApi, getDateApi } from "@/services/index";
 import Styles from "./index.module.scss";
 
@@ -19,14 +20,13 @@ const currentDate = new Date();
 
 const Calendar: Taro.FunctionComponent = () => {
   const [data, setData] = useState(defaultData);
+  const [errorData, setErrorData] = useState("");
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState({
     year: currentDate.getFullYear(),
     month: currentDate.getMonth() + 1
   });
-  const [{ loading: roleLoading }, fetchCalendar] = useAsyncFn<any>(
-    getCalendarRoleApi
-  );
+
   const [{ loading: signLoading }, fetchSign] = useAsyncFn<any>(signApi);
   const [
     { loading: dateLoading, value = { signdays: [] } },
@@ -36,15 +36,19 @@ const Calendar: Taro.FunctionComponent = () => {
     getConfig();
   }, []);
   useEffect(() => {
-    if (roleLoading || signLoading || dateLoading) {
+    if (signLoading || dateLoading) {
       Taro.showLoading({ title: "加载中...", mask: true });
     }
-  }, [roleLoading, signLoading, dateLoading]);
+  }, [signLoading, dateLoading]);
 
   const getConfig = async () => {
-    await fetchCalendar({ cardno: Taro.getStorageSync("cardno") }).then(
-      setData
-    );
+    Taro.showLoading({ title: "加载中...", mask: true });
+    await getCalendarRoleApi({ cardno: Taro.getStorageSync("cardno") })
+      .then(setData)
+      .catch((error: any) => {
+        setErrorData(error.errMsg);
+        Taro.hideLoading();
+      });
     await fetchDateApi(date);
     Taro.hideLoading();
   };
@@ -53,13 +57,15 @@ const Calendar: Taro.FunctionComponent = () => {
   };
 
   const sign = async () => {
+    if (errorData) {
+      return;
+    }
     await fetchSign({ cardno: Taro.getStorageSync("cardno") });
     await getConfig();
-    Taro.showToast({ icon: "none", title: "查询成功" });
   };
 
-  const onMonthChange = async (value: any) => {
-    const [year, month] = value.split("-");
+  const onMonthChange = async (values: any) => {
+    const [year, month] = values.split("-");
     setDate({ year, month });
     await fetchDateApi({ year, month });
     Taro.hideLoading();
@@ -72,17 +78,32 @@ const Calendar: Taro.FunctionComponent = () => {
           签到攻略 >
         </View>
       </View>
-      <View className={Styles.sign}>
+      <View
+        className={Styles.sign}
+        style={{
+          backgroundColor: Taro.getStorageSync("color")
+        }}
+      >
         {data.signflag ? (
-          <View className={Styles.p} style={{ opacity: 0.4 }}>
+          <View
+            className={Styles.p}
+            style={{
+              opacity: 0.4,
+              color: Taro.getStorageSync("color")
+            }}
+          >
             已签到
           </View>
         ) : (
-          <View className={Styles.p} onClick={sign}>
+          <View
+            className={cx({ [Styles.p]: true, [Styles.disabled]: !!errorData })}
+            onClick={sign}
+            style={{ color: Taro.getStorageSync("color") }}
+          >
             签到
           </View>
         )}
-        <View className={Styles.span}>{data.signdata}</View>
+        <View className={Styles.span}>{errorData || data.signdata}</View>
       </View>
       <AtCalendar
         marks={(value.signdays || []).map((dateDay: string) => {

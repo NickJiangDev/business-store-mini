@@ -8,9 +8,28 @@
   height: 76px !important;
   padding: 0 60px 0 60px;
 }
+.at-search-bar__action {
+  display: none !important;
+}
 
 .search {
+  width: 85vw;
   line-height: 60px;
+}
+
+.title-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+
+  .button {
+    margin-left: 1vw;
+    width: 11vw;
+    line-height: 60px;
+    font-size: 24px;
+    height: 60px;
+  }
 }
 
 .cell {

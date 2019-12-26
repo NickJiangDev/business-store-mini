@@ -59,6 +59,10 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
         if (confirm) {
           Taro.setStorageSync("token", "");
           Taro.setStorageSync("phone", "");
+          Taro.setStorageSync("color", "");
+          Taro.setStorageSync("headimgurl", "");
+          Taro.setStorageSync("headimgurl", "");
+          Taro.setStorageSync("headimgurl", "");
           Taro.reLaunch({ url: "/pages/index/index" });
         }
         return;
@@ -67,8 +71,11 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
         Taro.showToast({ icon: "none", title: ERROR_MAP[res.statusCode] });
         return Promise.reject();
       } else {
+        if (res.errMsg === "没有开启签到活动!") {
+          return Promise.reject(res);
+        }
         Taro.showToast({ icon: "none", title: res.errMsg });
-        return Promise.reject();
+        return Promise.reject(res);
       }
     }
     logger.info(`[ ${opt.method} ] ${fullUrl} fetched`, result);

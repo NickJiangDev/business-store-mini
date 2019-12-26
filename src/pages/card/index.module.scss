@@ -5,35 +5,9 @@
   background-color: #fff;
   overflow: hidden;
 }
-.sign {
-  .p {
-    color: #fff;
-  }
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 3vh 3vw;
-  margin: 20px;
-  border-radius: 12px;
-  height: 19vh;
-  background-color: $color-brand;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.userCell {
-  .img {
-    width: 17vw;
-    height: 17vw;
-    border-radius: 100%;
-  }
-  .p {
-    color: #fff;
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 20px;
-    margin-top: 40px;
-  }
+.swiperItem {
+  width: 100%;
+  height: 25vh;
 }
 
 .op {
@@ -93,8 +67,39 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  .textStyle {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .loading {
+      position: relative;
+      bottom: 3px;
+      margin-right: 6px;
+    }
+
+    .active {
+      animation: animal 1s infinite linear;
+      transform-origin: center center;
+    }
+  }
 }
 
 .emptyCode {
   margin: 30px auto;
+}
+
+@keyframes animal {
+  0% {
+    transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
 }

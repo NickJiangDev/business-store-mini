@@ -90,7 +90,14 @@ const CardCenter: Taro.FunctionComponent = () => {
                   <View className={Styles.cellIcon}></View>
                   <View>
                     <View>{v.couponname}</View>
-                    <View className={Styles.count}>{v.couponmoney}</View>
+                    <View
+                      className={Styles.count}
+                      style={{
+                        color: Taro.getStorageSync("color")
+                      }}
+                    >
+                      {v.couponmoney}
+                    </View>
                   </View>
                 </View>
               </View>
@@ -108,6 +115,9 @@ const CardCenter: Taro.FunctionComponent = () => {
                   className={Styles.btn}
                   onClick={() => goGet(v.billno)}
                   disabled={v.getamount === v.totalamount}
+                  customStyle={{
+                    backgroundColor: Taro.getStorageSync("color")
+                  }}
                 >
                   {v.getamount === v.totalamount ? "抢光了" : "立即抢"}
                 </AtButton>

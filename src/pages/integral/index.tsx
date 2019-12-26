@@ -15,10 +15,10 @@ const defaultData = {
 const getCellText = (cellData: any) => {
   const value =
     cellData.exchangevalue === 1
-      ? `1积分兑换${cellData.exchangerate}元}`
-      : `${cellData.exchangemoney}元`;
+      ? `1积分兑换${cellData.exchangemoney}元}`
+      : `${cellData.exchangerate}元`;
   const msg = cellData.exchangeflag === 1 ? "比例" : "金额";
-  return cellData.endmoney
+  return cellData.endmoney < 0
     ? `${cellData.startmoney}以上：兑换${msg}为${value}`
     : `${cellData.startmoney}-${cellData.endmoney}：兑换${msg}为${value}`;
 };
@@ -89,12 +89,20 @@ function Integral() {
           <View className={Styles.rulesTitle}>兑换规则</View>
           <View className={Styles.rulesContent}>
             {data.datalist.map((v: any) => (
-              <Text>{getCellText(v)}</Text>
+              <Text className={Styles.block}>{getCellText(v)}</Text>
             ))}
           </View>
         </View>
       </View>
-      <AtButton className={Styles.btn} type="primary" onClick={pointExchange}>
+      <AtButton
+        className={Styles.btn}
+        type="primary"
+        onClick={pointExchange}
+        customStyle={{
+          backgroundColor: Taro.getStorageSync("color"),
+          borderColor: Taro.getStorageSync("color")
+        }}
+      >
         积分兑换
       </AtButton>
     </View>

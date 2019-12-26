@@ -1,6 +1,6 @@
 import Taro, { useEffect } from "@tarojs/taro";
 import { Barcode, QRCode } from "taro-code";
-import { View, Text } from "@tarojs/components";
+import { View, Text, Image } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { getCardInfo, getCustomNum, getCardData } from "@/services";
 import Styles from "./index.module.scss";
@@ -9,16 +9,6 @@ let timer;
 const time = 60000;
 
 function Customer() {
-  // useEffect(() => {
-  //   Taro.setScreenBrightness({ value: 0.75 });
-  // }, []);
-
-  // useEffect(() => {
-  //   return () => {
-  //     Taro.setScreenBrightness({ value: 0.35 });
-  //   };
-  // }, []);
-
   const [{ value = { paycode: "", money: "0" } }, getCustom] = useAsyncFn<any>(
     getCustomNum
   );
@@ -59,11 +49,35 @@ function Customer() {
       Taro.hideLoading();
     });
   };
+
+  const imgStyle = Taro.getStorageSync("backImg")
+    ? { backgroundImage: `url(${Taro.getStorageSync("backImg")})` }
+    : {};
+  const colorStyle = Taro.getStorageSync("color")
+    ? { backgroundColor: Taro.getStorageSync("color") }
+    : {};
+  console.log(
+    Taro.getStorageSync("memname"),
+    Taro.getStorageSync("headimgurl")
+  );
   return (
     <View>
-      <View className={Styles.balance}>
-        <View className={Styles.p}>余额</View>
-        <View className={Styles.p}>￥{value.money}元</View>
+      <View className={Styles.sign} style={{ ...imgStyle, ...colorStyle }}>
+        <View className={Styles.userCell}>
+          <Image
+            src={Taro.getStorageSync("headimgurl")}
+            mode="aspectFit"
+            className={Styles.img}
+          />
+          <View className={Styles.p}>{Taro.getStorageSync("memname")}</View>
+        </View>
+        <View className={Styles.flex}>
+          <View>{Taro.getStorageSync("cardno")}</View>
+          <View className={Styles.flex}>
+            <View>余额</View>
+            <View>￥{value.money}元</View>
+          </View>
+        </View>
       </View>
       {value.paycode ? (
         <View className={Styles.barcode} onClick={() => refresh("click")}>

@@ -38,12 +38,6 @@
     height: 100%;
     width: 65vw;
     border-bottom: none;
-    background: radial-gradient(
-      circle at 50% 50%,
-      $color-brand 0,
-      $color-brand 50%,
-      transparent 0
-    );
     background-repeat: repeat-y;
     background-color: white;
     background-size: 20px 20px;
@@ -60,8 +54,8 @@
       }
 
       .cellIcon {
-        width: 6vh;
-        height: 6vh;
+        width: 5vh;
+        height: 5vh;
         background: url("../../assets/images/ticket.png");
         margin: 0 12px;
         background-size: contain;

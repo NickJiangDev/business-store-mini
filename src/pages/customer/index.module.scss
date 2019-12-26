@@ -1,5 +1,43 @@
 @import "../../theme/Variables.scss";
 
+.sign {
+  .p {
+    color: #fff;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3vh 3vw;
+  margin: 20px;
+  border-radius: 12px;
+  height: 19vh;
+  background-color: $color-brand;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.userCell {
+  .img {
+    width: 17vw;
+    height: 17vw;
+    border-radius: 100%;
+  }
+  .p {
+    color: #fff;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+    margin-top: 40px;
+  }
+}
+
 .barcode {
   display: flex;
   margin: 50px auto;

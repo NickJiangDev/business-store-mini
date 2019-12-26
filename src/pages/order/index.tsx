@@ -192,24 +192,39 @@ const Order: Taro.FunctionComponent = () => {
         <AtTabsPane current={count} index={0}>
           {data1.length || loading ? (
             <View className={Styles.tabs}>
-              {data1.map((v: any) => (
-                <View className={Styles.cell}>
+              {data1.map((v: any, i: number) => (
+                <View className={Styles.cell} key={i}>
                   <View className={Styles.leftCell}>
                     <View className={Styles.cellInfo}>
                       <View className={Styles.cellIcon}></View>
                       <View>
                         <View>{v.couponname}</View>
-                        <View className={Styles.count}>￥{v.couponmoney}</View>
+                        <View
+                          className={Styles.count}
+                          style={{
+                            color: Taro.getStorageSync("color")
+                          }}
+                        >
+                          ￥{v.couponmoney}
+                        </View>
                       </View>
                     </View>
                     <View className={Styles.cellDate}>
                       {`${v.starttime}至${v.endtime}`}
                     </View>
                   </View>
-                  <View className={Styles.rightCell}>
+                  <View
+                    className={Styles.rightCell}
+                    style={{
+                      backgroundColor: Taro.getStorageSync("color")
+                    }}
+                  >
                     <AtButton
                       className={Styles.btn}
                       onClick={() => openModal(v.couponcode)}
+                      customStyle={{
+                        color: Taro.getStorageSync("color")
+                      }}
                     >
                       立即使用
                     </AtButton>
@@ -228,14 +243,21 @@ const Order: Taro.FunctionComponent = () => {
         <AtTabsPane current={count} index={1}>
           {data2.length || loading ? (
             <View className={Styles.tabs}>
-              {data2.map((v: any) => (
-                <View className={Styles.cell}>
+              {data2.map((v: any, i: number) => (
+                <View className={Styles.cell} key={i}>
                   <View className={Styles.leftCell}>
                     <View className={Styles.cellInfo}>
                       <View className={Styles.cellIcon}></View>
                       <View>
                         <View>{v.couponname}</View>
-                        <View className={Styles.count}>￥{v.couponmoney}</View>
+                        <View
+                          className={Styles.count}
+                          customStyle={{
+                            color: Taro.getStorageSync("color")
+                          }}
+                        >
+                          ￥{v.couponmoney}
+                        </View>
                       </View>
                     </View>
                     <View className={Styles.cellDate}>
@@ -243,7 +265,13 @@ const Order: Taro.FunctionComponent = () => {
                     </View>
                   </View>
                   <View className={Styles.rightCell}>
-                    <AtButton className={Styles.btn} disabled={true}>
+                    <AtButton
+                      className={Styles.btn}
+                      disabled
+                      customStyle={{
+                        color: Taro.getStorageSync("color")
+                      }}
+                    >
                       已使用
                     </AtButton>
                     <View onClick={() => goRole(v.coupondesc)}>使用说明 ></View>
@@ -261,14 +289,21 @@ const Order: Taro.FunctionComponent = () => {
         <AtTabsPane current={count} index={2}>
           {data3.length || loading ? (
             <View className={Styles.tabs}>
-              {data3.map((v: any) => (
-                <View className={Styles.cell}>
+              {data3.map((v: any, i: number) => (
+                <View className={Styles.cell} key={i}>
                   <View className={Styles.leftCell}>
                     <View className={Styles.cellInfo}>
                       <View className={Styles.cellIcon}></View>
                       <View>
                         <View>{v.couponname}</View>
-                        <View className={Styles.count}>￥{v.couponmoney}</View>
+                        <View
+                          className={Styles.count}
+                          style={{
+                            color: Taro.getStorageSync("color")
+                          }}
+                        >
+                          ￥{v.couponmoney}
+                        </View>
                       </View>
                     </View>
                     <View className={Styles.cellDate}>
@@ -277,7 +312,7 @@ const Order: Taro.FunctionComponent = () => {
                     </View>
                   </View>
                   <View className={Styles.rightCell}>
-                    <AtButton className={Styles.btn} disabled={true}>
+                    <AtButton className={Styles.btn} disabled>
                       已过期
                     </AtButton>
                     <View onClick={() => goRole(v.coupondesc)}>使用说明 ></View>

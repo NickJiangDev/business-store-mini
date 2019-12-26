@@ -146,14 +146,26 @@ const NearShop: Taro.FunctionComponent = () => {
 
   return (
     <View>
-      <AtSearchBar
-        className="search"
-        showActionButton
-        placeholder="请输入门店名称"
-        onChange={onChange}
-        value={inputValue}
-        onActionClick={onSubmit}
-      />
+      <View className="title-flex">
+        <AtSearchBar
+          className="search"
+          placeholder="请输入门店名称"
+          onChange={onChange}
+          showActionButton
+          value={inputValue}
+        />
+        <AtButton
+          className="button"
+          type="primary"
+          onClick={onSubmit}
+          customStyle={{
+            borderColor: Taro.getStorageSync("color"),
+            backgroundColor: Taro.getStorageSync("color")
+          }}
+        >
+          搜索
+        </AtButton>
+      </View>
       <View className="near">
         <View className="nTitle">
           <Text>关注的门店</Text>
@@ -170,7 +182,15 @@ const NearShop: Taro.FunctionComponent = () => {
               <Text className="distance">{selectstore.distance}</Text>
               <Text className="address">{selectstore.shopaddr}</Text>
             </View>
-            <AtButton type="primary" className="btn" disabled={true}>
+            <AtButton
+              type="primary"
+              className="btn"
+              disabled={true}
+              customStyle={{
+                borderColor: Taro.getStorageSync("color"),
+                backgroundColor: Taro.getStorageSync("color")
+              }}
+            >
               已关注
             </AtButton>
           </View>
@@ -193,6 +213,10 @@ const NearShop: Taro.FunctionComponent = () => {
               type="primary"
               className="btn"
               onClick={() => goto(item.shopcode)}
+              customStyle={{
+                borderColor: Taro.getStorageSync("color"),
+                backgroundColor: Taro.getStorageSync("color")
+              }}
             >
               关注
             </AtButton>
