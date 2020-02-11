@@ -149,7 +149,6 @@ const Card: Taro.FunctionComponent = () => {
     [Styles.view3]: cellLength === 3,
     [Styles.view4]: cellLength === 4
   };
-
   return (
     <View className={Styles.pages}>
       <Swiper circular indicatorDots autoplay className={Styles.swiperItem}>
@@ -261,14 +260,17 @@ const Card: Taro.FunctionComponent = () => {
       )}
       {skeletonValue.columnlayout === "list" ? (
         <AtList>
-          {skeletonValue.column_info_list.map((v: any, i: number) => (
-            <AtListItem
-              key={i}
-              title={v.title}
-              extraText={v.tips}
-              onClick={() => goto(v)}
-            />
-          ))}
+          {skeletonValue.column_info_list.map((v: any, i: number) => {
+            console.log(v);
+            return (
+              <AtListItem
+                key={i}
+                title={v.title}
+                extraText={v.tips}
+                onClick={() => goto(v)}
+              />
+            );
+          })}
         </AtList>
       ) : (
         <AtGrid

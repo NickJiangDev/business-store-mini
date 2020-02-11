@@ -62,8 +62,7 @@ function Integral() {
           <Text className={Styles.inputTitle}>积分</Text>
           <AtInput
             className={cx({
-              [Styles.input]: true,
-              [Styles.gray]: true
+              [Styles.input]: true
             })}
             name=""
             title=""

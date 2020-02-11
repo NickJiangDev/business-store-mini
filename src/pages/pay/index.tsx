@@ -1,5 +1,6 @@
 import Taro, { useEffect, useState } from "@tarojs/taro";
 import { View, RichText } from "@tarojs/components";
+import parse from "@jiahuix/mini-html-parser2";
 import Styles from "./index.module.scss";
 import useAsyncFn from "@/shared/useAsyncFn";
 import { payConfigApi, payApi } from "@/services";
@@ -14,14 +15,24 @@ const defaultValue = {
 function Pay() {
   const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
   const [{ value = defaultValue, loading }, getConfig] = useAsyncFn<any>(
     payConfigApi
   );
   const [{ loading: payLoading }, pay] = useAsyncFn<any>(payApi);
+  const [rules, setRules] = useState("");
+
   useEffect(() => {
     const cardno = Taro.getStorageSync("cardno");
     getConfig({ cardno });
   }, [getConfig]);
+  useEffect(() => {
+    parse(value.rechargestrategy, (err, htmlNodes) => {
+      if (!err) {
+        setRules(htmlNodes);
+      }
+    });
+  }, [value]);
 
   useEffect(() => {
     if (loading || payLoading) {
@@ -31,8 +42,6 @@ function Pay() {
     }
   }, [loading, payLoading]);
   const payHandler = (count: string) => {
-    console.log(count);
-    debugger;
     const cardno = Taro.getStorageSync("cardno");
     pay({ cardno, rechargemoney: count }).then((data: any) => {
       Taro.requestPayment({
@@ -69,7 +78,8 @@ function Pay() {
       </View>
       <View className={Styles.payCell}>
         <View className={Styles.flexCell}>
-          {value.rechargelist.map((v: string, i: number) => (
+          {/* {value.rechargelist.map((v: string, i: number) => ( */}
+          {["5", "10", "50", "200", "1000"].map((v: string, i: number) => (
             <AtButton
               key={i}
               type="secondary"
@@ -105,7 +115,7 @@ function Pay() {
         onClose={() => setVisible(false)}
         title="充值规则"
       >
-        <RichText nodes={value.rechargestrategy} />
+        <RichText nodes={rules} />
       </AtFloatLayout>
     </View>
   );

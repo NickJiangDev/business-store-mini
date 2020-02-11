@@ -1,5 +1,32 @@
 import http from "@/helpers/http";
 
+// --------------------- 支付宝接口 -----------------------
+
+interface IAliLoginParams {
+  jscode: string;
+}
+/*
+ * 支付宝登录授权
+ * @param {ILoginParams} params
+ * @returns
+ */
+function getAliLogin(params: IAliLoginParams) {
+  return http.post({ model: "alilogin", action: "getalitoken" }, params);
+}
+
+interface IAliGetPhoneParams {
+  encrypteddata: any;
+}
+/*
+ * 支付宝手机号授权
+ * @param {IAliGetPhoneParams} params
+ * @returns
+ */
+function getAliPhone(params: IAliGetPhoneParams) {
+  return http.post({ model: "alilogin", action: "getphone" }, params);
+}
+
+// --------------------- 微信接口 -----------------------
 /*
  * 获取首页参数
  * @returns
@@ -296,5 +323,7 @@ export {
   getTicketApi,
   getDateApi,
   payConfigApi,
-  payApi
+  payApi,
+  getAliLogin,
+  getAliPhone
 };

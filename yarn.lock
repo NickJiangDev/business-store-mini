@@ -1043,6 +1043,15 @@
   dependencies:
     cross-spawn "^6.0.5"
 
+"@jiahuix/mini-html-parser2@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@jiahuix/mini-html-parser2/-/mini-html-parser2-0.1.6.tgz#f0a17506bc070c74473c27d5fad9b39414ceedf6"
+  integrity sha512-XOAVSZruW42pWpkXXE8dL4z+FpNjM/xYcBF+yKqNfhFiut2q+bB4podtF+C5AxZWH9bhgqRwhOlGU0zHyWmFeQ==
+  dependencies:
+    domhandler "^2.4.2"
+    entities "^1.1.1"
+    events "^3.0.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -4375,7 +4384,7 @@ domelementtype@^2.0.1:
   resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.0.1.tgz#1f8bdfe91f5a78063274e803b4bdcedf6e94f94d"
   integrity sha512-5HOHUDsYZWV8FGWN0Njbr/Rn7f/eWSQi1v7+HsUVwXgn8nWWlL64zKDkS0n8ZmQ3mlWOMuXOnR+7Nx/5tMO5AQ==
 
-domhandler@^2.3.0:
+domhandler@^2.3.0, domhandler@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-2.4.2.tgz#8805097e933d65e85546f726d60f5eb88b44f803"
   integrity sha512-JiK04h0Ht5u/80fdLMCEmV4zkNh2BcoMFBmZ/91WtYZ8qVXSKjiw7fXMgFPnHcSZgOo3XdinHvmnDUeMf5R4wA==
@@ -7675,6 +7684,15 @@ mini-css-extract-plugin@0.4.1:
     "@webpack-contrib/schema-utils" "^1.0.0-beta.0"
     loader-utils "^1.1.0"
     webpack-sources "^1.1.0"
+
+mini-html-parser2@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/mini-html-parser2/-/mini-html-parser2-0.1.4.tgz#fe972bd76c93237a14a9440573fbda97fd8c0e61"
+  integrity sha512-Z0pSC6Idpx6hYDVRu0j8LYoXLkOCxq/mcltmTMunqpFCT8ujyzybMjAuGdmDAh//rvE9tu/e4qAbHOjAjzDNAg==
+  dependencies:
+    domhandler "^2.4.2"
+    entities "^1.1.1"
+    events "^3.0.0"
 
 minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
   version "1.0.1"

@@ -1,6 +1,7 @@
 import Taro, { useEffect, useRouter, useState } from "@tarojs/taro";
 import { View, RichText } from "@tarojs/components";
 import useAsyncFn from "@/shared/useAsyncFn";
+import parse from "@jiahuix/mini-html-parser2";
 import { getLoginAgreement } from "@/services/index";
 
 import Styles from "./index.module.scss";
@@ -10,6 +11,12 @@ const Agreement: Taro.FunctionComponent = () => {
     params: { type }
   } = useRouter();
   const [data, setData] = useState({ regstatement: "" });
+  const [rules, setRules] = useState("");
+  parse(data.regstatement, (err, htmlNodes) => {
+    if (!err) {
+      setRules(htmlNodes);
+    }
+  });
   const [, fetchAgreement] = useAsyncFn<any>(getLoginAgreement);
 
   const typeWithFn = {
@@ -28,7 +35,7 @@ const Agreement: Taro.FunctionComponent = () => {
   };
   return (
     <View className={Styles.pages}>
-      <RichText nodes={data.regstatement} />
+      <RichText nodes={rules} />
     </View>
   );
 };
