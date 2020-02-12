@@ -6,9 +6,9 @@ import env from "./env";
 const path = Taro.getEnv() === "ALIPAY" ? "/ali/conv" : "/wechat/conv";
 export const host = env({
   dev: "",
-  test: `https://hytest.hycas.com${path}`,
+  test: `https://hytest1.hycas.com${path}`,
   uat: "",
-  release: ""
+  release: `https://hytest1.hycas.com${path}`
 });
 
 const http = createHttpUtil({
