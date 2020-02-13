@@ -26,6 +26,18 @@ function getAliPhone(params: IAliGetPhoneParams) {
   return http.post({ model: "alilogin", action: "getphone" }, params);
 }
 
+interface IAlipayParmas {
+  cardno: string;
+  rechargemoney: any;
+}
+/*
+ * 支付宝支付回调
+ * @param {IAlipayParmas} params
+ * @returns
+ */
+function aliPayApi(params: IAlipayParmas) {
+  return http.post({ model: "mem", action: "recharge" }, params);
+}
 // --------------------- 微信接口 -----------------------
 /*
  * 获取首页参数
@@ -325,5 +337,6 @@ export {
   payConfigApi,
   payApi,
   getAliLogin,
-  getAliPhone
+  getAliPhone,
+  aliPayApi
 };

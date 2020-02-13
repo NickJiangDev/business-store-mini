@@ -50,21 +50,21 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
     if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
       if (overdueCode.includes(res.statusCode)) {
         Taro.hideLoading();
-        const { confirm } = await Taro.showModal({
+        Taro.showModal({
           title: "提示",
           showCancel: false,
           content: "你的身份已失效，请重新登录",
-          confirmText: "重新登录"
+          confirmText: "重新登录",
+          success: () => {
+            Taro.setStorageSync("token", "");
+            Taro.setStorageSync("phone", "");
+            Taro.setStorageSync("color", "");
+            Taro.setStorageSync("headimgurl", "");
+            Taro.setStorageSync("headimgurl", "");
+            Taro.setStorageSync("headimgurl", "");
+            Taro.reLaunch({ url: "/pages/index/index" });
+          }
         });
-        if (confirm) {
-          Taro.setStorageSync("token", "");
-          Taro.setStorageSync("phone", "");
-          Taro.setStorageSync("color", "");
-          Taro.setStorageSync("headimgurl", "");
-          Taro.setStorageSync("headimgurl", "");
-          Taro.setStorageSync("headimgurl", "");
-          Taro.reLaunch({ url: "/pages/index/index" });
-        }
         return;
       }
       if (catchedCode.includes(res.statusCode)) {
@@ -79,6 +79,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
       }
     }
     logger.info(`[ ${opt.method} ] ${fullUrl} fetched`, result);
+    Taro.hideLoading();
     return res.data;
   };
   return {

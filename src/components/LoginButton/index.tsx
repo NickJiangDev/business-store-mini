@@ -26,6 +26,9 @@ function LoginButton() {
               const { accesstoken, aliuid } = await fetchLogin({
                 authcode: authCode
               });
+              // Taro.setStorageSync("token", accesstoken);
+              // Taro.setStorageSync("phone", "17521524019");
+              // return;
               // 手机号授权
               my.getPhoneNumber({
                 success: async (response: any) => {

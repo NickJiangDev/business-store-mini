@@ -10,6 +10,14 @@
   height: 25vh;
 }
 
+.list {
+  padding: 2vh 2vw;
+  color: #333;
+  border-bottom: 1px solid #e5ecf1;
+  display: flex;
+  justify-content: space-between;
+}
+
 .op {
   margin: 3vw 0 0;
   width: 100vw;

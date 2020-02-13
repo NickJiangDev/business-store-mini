@@ -1,10 +1,10 @@
 import Taro, { useEffect, useState } from "@tarojs/taro";
-import { View, RichText } from "@tarojs/components";
+import { View, RichText, Button } from "@tarojs/components";
 import parse from "@jiahuix/mini-html-parser2";
 import Styles from "./index.module.scss";
 import useAsyncFn from "@/shared/useAsyncFn";
-import { payConfigApi, payApi } from "@/services";
-import { AtButton, AtFloatLayout, AtInput } from "taro-ui";
+import { payConfigApi, payApi, aliPayApi } from "@/services";
+import { AtFloatLayout, AtInput } from "taro-ui";
 
 const defaultValue = {
   customemoney: "",
@@ -20,12 +20,13 @@ function Pay() {
     payConfigApi
   );
   const [{ loading: payLoading }, pay] = useAsyncFn<any>(payApi);
+  const [{ loading: alipayLoading }, aliPay] = useAsyncFn<any>(aliPayApi);
   const [rules, setRules] = useState("");
 
   useEffect(() => {
     const cardno = Taro.getStorageSync("cardno");
     getConfig({ cardno });
-  }, [getConfig]);
+  }, []);
   useEffect(() => {
     parse(value.rechargestrategy, (err, htmlNodes) => {
       if (!err) {
@@ -35,15 +36,32 @@ function Pay() {
   }, [value]);
 
   useEffect(() => {
-    if (loading || payLoading) {
+    if (loading || payLoading || alipayLoading) {
       Taro.showLoading({ title: "加载中...", mask: true });
-    } else {
-      Taro.hideLoading();
     }
-  }, [loading, payLoading]);
+  }, [loading, payLoading, alipayLoading]);
   const payHandler = (count: string) => {
+    Taro.getEnv() === "ALIPAY" ? alipayHandler(count) : wechatHandler(count);
+  };
+  const alipayHandler = async (count: string) => {
+    const cardno = Taro.getStorageSync("cardno");
+    await aliPay({ cardno, rechargemoney: count }).then((data: any) => {
+      Taro.hideLoading();
+      my.tradePay({
+        tradeNO: data.tradeno,
+        success: function() {
+          getConfig({ cardno });
+        },
+        fail: function() {
+          Taro.showToast({ icon: "none", title: "失败" });
+        }
+      });
+    });
+  };
+  const wechatHandler = (count: string) => {
     const cardno = Taro.getStorageSync("cardno");
     pay({ cardno, rechargemoney: count }).then((data: any) => {
+      Taro.hideLoading();
       Taro.requestPayment({
         timeStamp: data.timestamp,
         nonceStr: data.noncestr,
@@ -51,12 +69,16 @@ function Pay() {
         signType: data.signtype,
         paySign: data.sign,
         success() {
-          Taro.showToast({ icon: "success", title: "充值成功" });
-          getConfig({ cardno });
-          setInputValue("");
+          successHandler(cardno);
         }
       });
     });
+  };
+
+  const successHandler = (cardno: string) => {
+    Taro.showToast({ icon: "success", title: "充值成功" });
+    getConfig({ cardno });
+    setInputValue("");
   };
   const inputOnChange = (v: any) => {
     const newInput = v.replace(/[^0-9]/gi, "");
@@ -80,18 +102,17 @@ function Pay() {
         <View className={Styles.flexCell}>
           {/* {value.rechargelist.map((v: string, i: number) => ( */}
           {["5", "10", "50", "200", "1000"].map((v: string, i: number) => (
-            <AtButton
+            <Button
               key={i}
-              type="secondary"
               className={Styles.cell}
-              customStyle={{
+              style={{
                 color: Taro.getStorageSync("color"),
                 borderColor: Taro.getStorageSync("color")
               }}
               onClick={() => payHandler(v)}
             >
               {v}元
-            </AtButton>
+            </Button>
           ))}
           {value.customemoney ? (
             <AtInput
