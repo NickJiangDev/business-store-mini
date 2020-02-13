@@ -100,8 +100,7 @@ function Pay() {
       </View>
       <View className={Styles.payCell}>
         <View className={Styles.flexCell}>
-          {/* {value.rechargelist.map((v: string, i: number) => ( */}
-          {["5", "10", "50", "200", "1000"].map((v: string, i: number) => (
+          {value.rechargelist.map((v: string, i: number) => (
             <Button
               key={i}
               className={Styles.cell}
