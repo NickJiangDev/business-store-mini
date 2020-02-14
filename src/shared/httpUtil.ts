@@ -46,7 +46,7 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
     });
 
     const res = normalizeWxResponse(result);
-
+    console.log("11=");
     if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
       if (overdueCode.includes(res.statusCode)) {
         Taro.hideLoading();
@@ -72,6 +72,9 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
         return Promise.reject();
       } else {
         if (res.errMsg === "没有开启签到活动!") {
+          return Promise.reject(res);
+        }
+        if (api.action === "getphone" && api.model === "alilogin") {
           return Promise.reject(res);
         }
         Taro.showToast({ icon: "none", title: res.errMsg });
