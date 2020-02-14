@@ -7676,6 +7676,11 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
+mini-antui@^0.4.35:
+  version "0.4.35"
+  resolved "https://registry.yarnpkg.com/mini-antui/-/mini-antui-0.4.35.tgz#e32d8df1c64ac558f8471db2e46073b20de4dd2c"
+  integrity sha512-thLRUH418UN0rps+Dnt+iz1W4Ac/v8ZMscH6mgQmhkvvPd1q6vNFRXL2kIfemm9F6bG+WN2Lpik2qB0qqqieew==
+
 mini-css-extract-plugin@0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.4.1.tgz#d2bcf77bb2596b8e4bd9257e43d3f9164c2e86cb"

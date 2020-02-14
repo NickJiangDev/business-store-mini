@@ -52,11 +52,9 @@ function LoginButton() {
                   userinfo: JSON.stringify(userInfo)
                 });
                 Taro.showToast({ icon: "none", title: "登录成功，请继续登录" });
+                Taro.setStorageSync("token", accesstoken);
+                Taro.setStorageSync("phone", "17521524019");
               });
-              // Taro.setStorageSync("token", accesstoken);
-              // Taro.setStorageSync("phone", "17521524019");
-              // return;
-              // 手机号授权
             } catch (error) {}
           }
         });

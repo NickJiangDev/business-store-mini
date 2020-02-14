@@ -65,11 +65,32 @@ const Calendar: Taro.FunctionComponent = () => {
   };
 
   const onMonthChange = async (values: any) => {
+    if (Taro.getEnv() === "ALIPAY") {
+      const currentValue = +values + 1;
+      const isAddYear = currentValue === 1 && +date.month === 12;
+      const isDYear = currentValue === 12 && +date.month === 1;
+      let year = date.year;
+      if (isAddYear) {
+        year = year + 1;
+      }
+      if (isDYear) {
+        year = year - 1;
+      }
+      const params = {
+        year,
+        month: currentValue
+      };
+      setDate(params);
+      await fetchDateApi(params);
+      return;
+    }
+
     const [year, month] = values.split("-");
     setDate({ year, month });
     await fetchDateApi({ year, month });
     Taro.hideLoading();
   };
+
   return (
     <View>
       <View className={Styles.signHeader}>
@@ -105,12 +126,26 @@ const Calendar: Taro.FunctionComponent = () => {
         )}
         <View className={Styles.span}>{errorData || data.signdata}</View>
       </View>
-      <AtCalendar
-        marks={(value.signdays || []).map((dateDay: string) => {
-          return { value: [date.year, date.month, dateDay].join("-") };
-        })}
-        onMonthChange={onMonthChange}
-      />
+      {Taro.getEnv() === "ALIPAY" ? (
+        <calendar
+          tagData={(value.signdays || []).map((dateDay: string) => {
+            return {
+              date: [date.year, date.month, dateDay].join("-"),
+              tag: "已签到",
+              tagColor: 1
+            };
+          })}
+          onMonthChange={onMonthChange}
+        ></calendar>
+      ) : (
+        <AtCalendar
+          marks={(value.signdays || []).map((dateDay: string) => {
+            return { value: [date.year, date.month, dateDay].join("-") };
+          })}
+          onMonthChange={onMonthChange}
+        />
+      )}
+
       <AtFloatLayout
         isOpened={visible}
         title="签到规则"
@@ -123,7 +158,10 @@ const Calendar: Taro.FunctionComponent = () => {
 };
 
 Calendar.config = {
-  navigationBarTitleText: "每日签到"
+  navigationBarTitleText: "每日签到",
+  usingComponents: {
+    calendar: "../../vendor/mini-antui/es/calendar/index"
+  }
 };
 
 export default Calendar;
