@@ -46,7 +46,6 @@ export default function createHttpUtil(createOption: createHttpHelperOption) {
     });
 
     const res = normalizeWxResponse(result);
-    console.log("11=");
     if (res.statusCode !== 0 || catchedCode.includes(res.statusCode)) {
       if (overdueCode.includes(res.statusCode)) {
         Taro.hideLoading();

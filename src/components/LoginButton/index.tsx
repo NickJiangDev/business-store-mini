@@ -18,7 +18,7 @@ function LoginButton() {
 
   const getPhoneNumber = () => {
     my.getPhoneNumber({
-      success: async (response: any) => {
+      success: (response: any) => {
         const encryptedData = response.response;
         fetchGetPhone({
           encrypteddata: encryptedData,
@@ -38,19 +38,21 @@ function LoginButton() {
         // token授权以及用户信息(https://opendocs.alipay.com/mini/introduce/twn8vq)
         my.getAuthCode({
           scopes: ["auth_user"],
-          success: async (res: any) => {
+          success: (res: any) => {
             try {
               const authCode = res.authCode;
-              const { accesstoken, aliuid } = await fetchLogin({
+              fetchLogin({
                 authcode: authCode
+              }).then((response: any) => {
+                const { accesstoken, aliuid } = response;
+                setIsLogin(true);
+                setToken(accesstoken);
+                setPhoneParams({
+                  aliuserid: aliuid,
+                  userinfo: JSON.stringify(userInfo)
+                });
+                Taro.showToast({ icon: "none", title: "登录成功，请继续登录" });
               });
-              setIsLogin(true);
-              setToken(accesstoken);
-              setPhoneParams({
-                aliuserid: aliuid,
-                userinfo: JSON.stringify(userInfo)
-              });
-              Taro.showToast({ icon: "none", title: "登录成功，请继续登录" });
               // Taro.setStorageSync("token", accesstoken);
               // Taro.setStorageSync("phone", "17521524019");
               // return;
