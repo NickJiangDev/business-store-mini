@@ -131,7 +131,7 @@ const Calendar: Taro.FunctionComponent = () => {
           tagData={(value.signdays || []).map((dateDay: string) => {
             return {
               date: [date.year, date.month, dateDay].join("-"),
-              tag: "已签到",
+              tag: "●",
               tagColor: 1
             };
           })}
